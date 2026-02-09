@@ -1,0 +1,8 @@
+# File Optimization Dependencies
+# Install with: pip install -r scripts/paddleocr-vl-1.5/requirements-optimize.txt
+
+# Image processing
+Pillow>=10.0.0
+
+# PDF processing
+PyMuPDF>=1.23.0

@@ -1,0 +1,50 @@
+# Environment variables (contains sensitive tokens)
+.env
+
+# Old config file (deprecated)
+.ppocrv5_config.json
+
+# Node
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Claude Code local settings
+.claude/
+
+# Logs
+*.log
+
+# Skill packaging temporary files
+*.skill.bak
+pack_skill.py
+
+# Test artifacts
+test-paddleocr-install/
