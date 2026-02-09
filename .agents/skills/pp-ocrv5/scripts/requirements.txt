@@ -1,4 +1,0 @@
-# Runtime dependencies for PP-OCRv5 API Skill
-
-httpx>=0.24.0
-python-dotenv>=0.19.0
