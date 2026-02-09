@@ -21,69 +21,96 @@ Where `<ACCESS_TOKEN>` is the API token obtained from [PaddleOCR official websit
 
 ## Request Body
 
-### URL-based Input
-
-```json
-{
-  "file_url": "https://example.com/document.pdf"
-}
-```
-
-### Base64-encoded Input
-
 ```json
 {
   "file": "<base64_encoded_content>",
-  "fileType": 0
+  "fileType": 0,
+  "useDocOrientationClassify": false,
+  "useDocUnwarping": false,
+  "useChartRecognition": false
 }
 ```
 
-### Key Parameters
+### Required Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `file_url` | string | URL to document (PDF or image) |
 | `file` | string | Base64-encoded file content |
 | `fileType` | number | `0` = PDF, `1` = Image |
+
+### Optional Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `useDocOrientationClassify` | boolean | `false` | Enable document orientation correction |
+| `useDocUnwarping` | boolean | `false` | Enable document unwarping/skew correction |
+| `useChartRecognition` | boolean | `false` | Enable chart recognition |
 
 ## Response Structure
 
 ### Success Response
 
-The response contains an array of page results (one object per page):
-
 ```json
 {
+  "logId": "request-uuid",
   "errorCode": 0,
-  "errorMsg": "",
-  "result": [
-    {
-      "prunedResult": {
-        "model_settings": {...},
-        "parsing_res_list": [
-          {
-            "block_label": "text",
-            "block_content": "Recognized text content",
-            "block_bbox": [x1, y1, x2, y2],
-            "block_id": 0,
-            "group_id": 0,
-            "block_polygon_points": [[x1, y1], ...]
+  "errorMsg": "Success",
+  "result": {
+    "layoutParsingResults": [
+      {
+        "prunedResult": {
+          "page_count": 1,
+          "width": 1200,
+          "height": 800,
+          "model_settings": {...},
+          "parsing_res_list": [
+            {
+              "block_label": "text",
+              "block_content": "Recognized text content",
+              "block_bbox": [x1, y1, x2, y2],
+              "block_id": 0,
+              "block_order": 1,
+              "group_id": 0,
+              "block_polygon_points": [[x1, y1], ...]
+            }
+          ],
+          "layout_det_res": {
+            "boxes": [
+              {
+                "cls_id": 22,
+                "label": "text",
+                "score": 0.87,
+                "coordinate": [x1, y1, x2, y2],
+                "order": 1,
+                "polygon_points": [[x1, y1], ...]
+              }
+            ]
           }
-        ],
-        "layout_det_res": {
-          "boxes": [
-            {"cls_id": 22, "label": "text", "score": 0.87, "coordinate": [x1, y1, x2, y2]}
-          ]
-        }
-      },
-      "markdown": {
-        "text": "Full page content in markdown/HTML",
-        "images": {"imgs/filename.jpg": "https://..."}
+        },
+        "markdown": {
+          "text": "Full page content in markdown/HTML",
+          "images": {"imgs/filename.jpg": "https://..."}
+        },
+        "outputImages": {
+          "layout_det_res": "https://..."
+        },
+        "inputImage": "https://..."
       }
-    }
-  ]
+    ],
+    "dataInfo": {
+      "numPages": 1,
+      "pages": [{"width": 1200, "height": 800}],
+      "type": "pdf"
+    },
+    "preprocessedImages": ["https://..."]
+  }
 }
 ```
+
+Key points:
+- `result.layoutParsingResults` is an array with one object per page
+- Each page contains `prunedResult` (structured blocks), `markdown` (rendered text), and image URLs
+- `dataInfo` contains document metadata (page count, dimensions, file type)
 
 ### Error Response
 
@@ -118,10 +145,9 @@ HTTP status codes indicate errors:
 
 ## Best Practices
 
-1. **Use URL for large files**: Prefer `file_url` over base64 for files >5MB
-2. **Handle timeouts**: For large documents, processing may take several minutes
-3. **Retry on 503/504**: Use exponential backoff
-4. **Never log tokens**: Keep credentials secure
+1. **Handle timeouts**: For large documents, processing may take several minutes
+2. **Retry on 503/504**: Use exponential backoff
+3. **Never log tokens**: Keep credentials secure
 
 ## Request Example
 
@@ -130,6 +156,9 @@ curl -X POST "https://xxxxx.aistudio-app.com/layout-parsing" \
   -H "Authorization: token YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "file_url": "https://example.com/document.pdf"
+    "file": "'$(base64 -w 0 document.pdf)'",
+    "fileType": 0,
+    "useDocOrientationClassify": true,
+    "useDocUnwarping": true
   }'
 ```

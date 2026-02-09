@@ -258,21 +258,36 @@ def parse_document(
     # Extract text
     text = _extract_text(result)
 
+    # Extract layoutParsingResults array for callers
+    raw_result = result.get("result", {})
+    if isinstance(raw_result, dict):
+        pages = raw_result.get("layoutParsingResults", [])
+    else:
+        pages = raw_result
+
     return {
         "ok": True,
         "text": text,
-        "result": result,
+        "result": pages,
         "error": None,
     }
 
 
 def _extract_text(result) -> str:
     """Extract text from document parsing result."""
-    # API returns {"errorCode": 0, "result": [{page}, ...]}
-    pages = result.get("result", result) if isinstance(result, dict) else result
+    # API returns {"errorCode": 0, "result": {"layoutParsingResults": [{page}, ...]}}
+    raw_result = result.get("result", result) if isinstance(result, dict) else result
+
+    # Extract layoutParsingResults array from the result wrapper
+    if isinstance(raw_result, dict):
+        pages = raw_result.get("layoutParsingResults", [])
+    elif isinstance(raw_result, list):
+        pages = raw_result
+    else:
+        pages = []
 
     # Handle list of pages
-    if isinstance(pages, list):
+    if isinstance(pages, list) and pages:
         texts = []
         for page in pages:
             if not isinstance(page, dict):

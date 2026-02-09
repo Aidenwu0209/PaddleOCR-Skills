@@ -38,12 +38,15 @@ On error:
 
 ## Raw API Result Structure
 
-The `result` field contains an array with one object per page:
+The raw API response wraps page results in `result.layoutParsingResults`. The `result` field in our envelope extracts this array directly — one object per page:
 
 ```json
 [
   {
     "prunedResult": {
+      "page_count": 1,
+      "width": 1200,
+      "height": 800,
       "model_settings": {...},
       "parsing_res_list": [...],
       "layout_det_res": {"boxes": [...]}
