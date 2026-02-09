@@ -58,7 +58,7 @@ Examples:
 
 Configuration:
   Run: python scripts/paddleocr-doc-parsing/configure.py
-  Or set in .env: PADDLEOCR_PARSING_API_URL, PADDLEOCR_ACCESS_TOKEN
+  Or set in .env: PADDLEOCR_DOC_PARSING_API_URL, PADDLEOCR_ACCESS_TOKEN
         """,
     )
 

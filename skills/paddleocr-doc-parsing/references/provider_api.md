@@ -4,7 +4,7 @@ This document describes the external provider API contract that this skill depen
 
 ## Endpoint
 
-**POST** `<PADDLEOCR_PARSING_API_URL>`
+**POST** `<PADDLEOCR_DOC_PARSING_API_URL>`
 
 Where the URL is obtained from [PaddleOCR official website](https://paddleocr.com).
 

@@ -64,7 +64,7 @@ def save_config(api_url: str, token: str, project_root: Path, quiet: bool = Fals
                     key, value = line.split("=", 1)
                     key = key.strip()
                     if key not in [
-                        "PADDLEOCR_PARSING_API_URL",
+                        "PADDLEOCR_DOC_PARSING_API_URL",
                         "PADDLEOCR_ACCESS_TOKEN",
                     ]:
                         existing_config[key] = value.strip()
@@ -82,7 +82,7 @@ def save_config(api_url: str, token: str, project_root: Path, quiet: bool = Fals
             f.write("# ========================================\n")
             f.write("# PaddleOCR Document Parsing Configuration\n")
             f.write("# ========================================\n")
-            f.write(f"PADDLEOCR_PARSING_API_URL={api_url}\n")
+            f.write(f"PADDLEOCR_DOC_PARSING_API_URL={api_url}\n")
             f.write(f"PADDLEOCR_ACCESS_TOKEN={token}\n")
             f.write("\n")
 
@@ -150,7 +150,7 @@ Get your API credentials at: https://paddleocr.com
                 if not args.quiet:
                     masked_token = token[:8] + "..." + token[-4:] if len(token) > 12 else "***"
                     print("\n[OK] Configuration complete!")
-                    print(f"  PADDLEOCR_PARSING_API_URL: {api_url}")
+                    print(f"  PADDLEOCR_DOC_PARSING_API_URL: {api_url}")
                     print(f"  PADDLEOCR_ACCESS_TOKEN: {masked_token}")
                 sys.exit(0)
             else:
@@ -191,7 +191,7 @@ Get your API credentials at: https://paddleocr.com
         print()
 
     # Get current values
-    current_api_url = existing_config.get("PADDLEOCR_PARSING_API_URL", "")
+    current_api_url = existing_config.get("PADDLEOCR_DOC_PARSING_API_URL", "")
     current_token = existing_config.get("PADDLEOCR_ACCESS_TOKEN", "")
 
     print("Please provide your PaddleOCR document parsing API credentials:")
@@ -199,17 +199,17 @@ Get your API credentials at: https://paddleocr.com
     print()
 
     # Prompt for API URL
-    print("1. PADDLEOCR_PARSING_API_URL - Document parsing API endpoint")
+    print("1. PADDLEOCR_DOC_PARSING_API_URL - Document parsing API endpoint")
     print("   Example: https://your-service.paddleocr.com/v1")
     if current_api_url:
         print(f"   Current: {current_api_url}")
 
-    api_url_input = input("   Enter PADDLEOCR_PARSING_API_URL: ").strip()
+    api_url_input = input("   Enter PADDLEOCR_DOC_PARSING_API_URL: ").strip()
     new_api_url = api_url_input if api_url_input else current_api_url
 
     if not new_api_url:
         print()
-        print("ERROR: PADDLEOCR_PARSING_API_URL is required.")
+        print("ERROR: PADDLEOCR_DOC_PARSING_API_URL is required.")
         print("Please run this wizard again and provide a valid API URL.")
         sys.exit(1)
 
@@ -250,7 +250,7 @@ Get your API credentials at: https://paddleocr.com
 
         api_url, token = get_config()
 
-        print("[OK] PADDLEOCR_PARSING_API_URL loaded successfully")
+        print("[OK] PADDLEOCR_DOC_PARSING_API_URL loaded successfully")
         print("[OK] PADDLEOCR_ACCESS_TOKEN loaded successfully")
         print()
 

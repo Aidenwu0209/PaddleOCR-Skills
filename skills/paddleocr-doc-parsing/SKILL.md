@@ -215,18 +215,18 @@ Configuration error: API not configured. Get your API at: https://paddleocr.com
 
 2. **Tell user to provide credentials**:
    ```
-   Please visit the URL above to get your PADDLEOCR_PARSING_API_URL and PADDLEOCR_ACCESS_TOKEN.
+   Please visit the URL above to get your PADDLEOCR_DOC_PARSING_API_URL and PADDLEOCR_ACCESS_TOKEN.
    Once you have them, send them to me and I'll configure it automatically.
    ```
 
 3. **When user provides credentials** (accept any format):
-   - `PADDLEOCR_PARSING_API_URL=https://xxx.com/layout-parsing, PADDLEOCR_ACCESS_TOKEN=abc123...`
+   - `PADDLEOCR_DOC_PARSING_API_URL=https://xxx.com/layout-parsing, PADDLEOCR_ACCESS_TOKEN=abc123...`
    - `Here's my API: https://xxx and token: abc123`
    - Copy-pasted code format
    - Any other reasonable format
 
 4. **Parse credentials from user's message**:
-   - Extract PADDLEOCR_PARSING_API_URL value (look for URLs)
+   - Extract PADDLEOCR_DOC_PARSING_API_URL value (look for URLs)
    - Extract PADDLEOCR_ACCESS_TOKEN value (long alphanumeric string, usually 40+ chars)
 
 5. **Configure automatically**:
@@ -336,7 +336,7 @@ For in-depth understanding of the PaddleOCR Document Parsing system, refer to:
 - `references/output_schema.md` - Output format specification
 - `references/provider_api.md` - Provider API contract
 
-> **Note**: Model version and capabilities are determined by your API endpoint (PADDLEOCR_PARSING_API_URL).
+> **Note**: Model version and capabilities are determined by your API endpoint (PADDLEOCR_DOC_PARSING_API_URL).
 
 Load these reference documents into context when:
 - Debugging complex parsing issues

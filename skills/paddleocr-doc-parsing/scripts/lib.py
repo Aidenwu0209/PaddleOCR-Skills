@@ -84,12 +84,12 @@ def get_config() -> tuple[str, str]:
     Raises:
         ValueError: If not configured
     """
-    api_url = _get_env("PADDLEOCR_PARSING_API_URL")
+    api_url = _get_env("PADDLEOCR_DOC_PARSING_API_URL")
     token = _get_env("PADDLEOCR_ACCESS_TOKEN")
 
     if not api_url:
         raise ValueError(
-            f"PADDLEOCR_PARSING_API_URL not configured. Get your API at: {API_GUIDE_URL}"
+            f"PADDLEOCR_DOC_PARSING_API_URL not configured. Get your API at: {API_GUIDE_URL}"
         )
     if not token:
         raise ValueError(
@@ -156,7 +156,7 @@ def _make_api_request(api_url: str, token: str, params: dict) -> dict:
         "Content-Type": "application/json",
     }
 
-    timeout = float(os.getenv("PADDLEOCR_PARSING_TIMEOUT", str(DEFAULT_TIMEOUT)))
+    timeout = float(os.getenv("PADDLEOCR_DOC_PARSING_TIMEOUT", str(DEFAULT_TIMEOUT)))
 
     try:
         with httpx.Client(timeout=timeout) as client:
