@@ -10,7 +10,7 @@ This document defines the output format returned by `vl_caller.py`, based on the
 {
   "ok": true,
   "text": "Extracted markdown text from all pages",
-  "result": [raw API result array],
+  "result": {complete raw API response},
   "error": null
 }
 ```
@@ -38,27 +38,40 @@ On error:
 
 ## Raw API Result Structure
 
-The raw API response wraps page results in `result.layoutParsingResults`. The `result` field in our envelope extracts this array directly — one object per page:
+The `result` field contains the complete raw API response:
 
 ```json
-[
-  {
-    "prunedResult": {
-      "page_count": 1,
-      "width": 1200,
-      "height": 800,
-      "model_settings": {...},
-      "parsing_res_list": [...],
-      "layout_det_res": {"boxes": [...]}
+{
+  "logId": "request-uuid",
+  "errorCode": 0,
+  "errorMsg": "Success",
+  "result": {
+    "layoutParsingResults": [
+      {
+        "prunedResult": {
+          "page_count": 1,
+          "width": 1200,
+          "height": 800,
+          "model_settings": {...},
+          "parsing_res_list": [...],
+          "layout_det_res": {"boxes": [...]}
+        },
+        "markdown": {
+          "text": "Full page content in markdown/HTML format",
+          "images": {"imgs/filename.jpg": "https://..."}
+        },
+        "outputImages": {"layout_det_res": "https://..."},
+        "inputImage": "https://..."
+      }
+    ],
+    "dataInfo": {
+      "numPages": 1,
+      "pages": [{"width": 1200, "height": 800}],
+      "type": "pdf"
     },
-    "markdown": {
-      "text": "Full page content in markdown/HTML format",
-      "images": {"imgs/filename.jpg": "https://..."}
-    },
-    "outputImages": {"layout_det_res": "https://..."},
-    "inputImage": "https://..."
+    "preprocessedImages": ["https://..."]
   }
-]
+}
 ```
 
 ### `prunedResult.parsing_res_list`
@@ -148,7 +161,7 @@ if data["ok"]:
     print(data["text"])
 
     # Detailed: iterate blocks
-    for page in data["result"]:
+    for page in data["result"]["result"]["layoutParsingResults"]:
         for block in page["prunedResult"]["parsing_res_list"]:
             print(f"[{block['block_label']}] {block['block_content'][:50]}")
 else:

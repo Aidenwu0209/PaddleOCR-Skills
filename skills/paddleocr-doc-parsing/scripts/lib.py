@@ -258,17 +258,10 @@ def parse_document(
     # Extract text
     text = _extract_text(result)
 
-    # Extract layoutParsingResults array for callers
-    raw_result = result.get("result", {})
-    if isinstance(raw_result, dict):
-        pages = raw_result.get("layoutParsingResults", [])
-    else:
-        pages = raw_result
-
     return {
         "ok": True,
         "text": text,
-        "result": pages,
+        "result": result,
         "error": None,
     }
 
