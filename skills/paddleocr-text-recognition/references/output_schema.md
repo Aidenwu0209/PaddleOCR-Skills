@@ -10,7 +10,7 @@ This document defines the output format returned by `ocr_caller.py`, based on th
 {
   "ok": true,
   "text": "Extracted text from all pages",
-  "result": [raw API result array],
+  "result": {complete raw API response},
   "error": null
 }
 ```
@@ -38,32 +38,45 @@ On error:
 
 ## Raw API Result Structure
 
-The `result` field contains an array with one object per page:
+The `result` field contains the complete raw API response:
 
 ```json
-[
-  {
-    "prunedResult": {
-      "model_settings": {...},
-      "dt_polys": [[[x1, y1], [x2, y2], [x3, y3], [x4, y4]], ...],
-      "text_det_params": {
-        "limit_side_len": 64,
-        "limit_type": "min",
-        "thresh": 0.3,
-        "max_side_limit": 4000,
-        "box_thresh": 0.6,
-        "unclip_ratio": 1.5
-      },
-      "text_type": "general",
-      "rec_texts": ["First line of text", "Second line of text", ...],
-      "rec_scores": [0.98, 0.95, ...],
-      "rec_polys": [[[x1, y1], [x2, y2], [x3, y3], [x4, y4]], ...],
-      "rec_boxes": [[x1, y1, x2, y2], ...]
+{
+  "logId": "request-uuid",
+  "errorCode": 0,
+  "errorMsg": "Success",
+  "result": {
+    "ocrResults": [
+      {
+        "prunedResult": {
+          "model_settings": {...},
+          "dt_polys": [[[x1, y1], [x2, y2], [x3, y3], [x4, y4]], ...],
+          "text_det_params": {
+            "limit_side_len": 64,
+            "limit_type": "min",
+            "thresh": 0.3,
+            "max_side_limit": 4000,
+            "box_thresh": 0.6,
+            "unclip_ratio": 1.5
+          },
+          "text_type": "general",
+          "rec_texts": ["First line of text", "Second line of text", ...],
+          "rec_scores": [0.98, 0.95, ...],
+          "rec_polys": [[[x1, y1], [x2, y2], [x3, y3], [x4, y4]], ...],
+          "rec_boxes": [[x1, y1, x2, y2], ...]
+        },
+        "ocrImage": "https://...",
+        "inputImage": "https://..."
+      }
+    ],
+    "dataInfo": {
+      "numPages": 1,
+      "pages": [{"width": 1191, "height": 1684}],
+      "type": "pdf"
     },
-    "ocrImage": "https://...",
-    "inputImage": "https://..."
+    "preprocessedImages": []
   }
-]
+}
 ```
 
 ### `prunedResult` Fields
@@ -113,7 +126,7 @@ if data["ok"]:
     print(data["text"])
 
     # Detailed: iterate pages
-    for page in data["result"]:
+    for page in data["result"]["result"]["ocrResults"]:
         texts = page["prunedResult"]["rec_texts"]
         scores = page["prunedResult"]["rec_scores"]
         for text, score in zip(texts, scores):

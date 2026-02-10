@@ -59,33 +59,47 @@ Where `<ACCESS_TOKEN>` is the API token obtained from [PaddleOCR official websit
 
 ```jsonc
 {
+  "logId": "request-uuid",
   "errorCode": 0,
-  "errorMsg": "",
-  "result": [                                           // Array (one object per page)
-    {
-      "prunedResult": {
-        "model_settings": {...},                        // Model configuration
-        "rec_texts": ["Line 1", "Line 2", "Line 3"],   // Recognized text
-        "rec_scores": [0.98, 0.95, 0.92],              // Confidence scores
-        "rec_boxes": [                                  // Bounding boxes [x1,y1,x2,y2]
-          [10, 20, 100, 50],
-          [10, 60, 150, 90],
-          [200, 60, 300, 90]
-        ],
-        "rec_polys": [                                  // Polygon coordinates
-          [[10, 20], [100, 20], [100, 50], [10, 50]],
-          ...
-        ],
-        "dt_polys": [...],                              // Detection polygons
-        "text_det_params": {...},                        // Detection parameters
-        "text_type": "general"                          // Text type
-      },
-      "ocrImage": "https://...",                        // Visualization URL
-      "inputImage": "https://..."                       // Input image URL
-    }
-  ]
+  "errorMsg": "Success",
+  "result": {
+    "ocrResults": [                                     // Array (one object per page)
+      {
+        "prunedResult": {
+          "model_settings": {...},                      // Model configuration
+          "rec_texts": ["Line 1", "Line 2", "Line 3"], // Recognized text
+          "rec_scores": [0.98, 0.95, 0.92],            // Confidence scores
+          "rec_boxes": [                                // Bounding boxes [x1,y1,x2,y2]
+            [10, 20, 100, 50],
+            [10, 60, 150, 90],
+            [200, 60, 300, 90]
+          ],
+          "rec_polys": [                                // Polygon coordinates
+            [[10, 20], [100, 20], [100, 50], [10, 50]],
+            ...
+          ],
+          "dt_polys": [...],                            // Detection polygons
+          "text_det_params": {...},                      // Detection parameters
+          "text_type": "general"                        // Text type
+        },
+        "ocrImage": "https://...",                      // Visualization URL
+        "inputImage": "https://..."                     // Input image URL
+      }
+    ],
+    "dataInfo": {                                       // Document metadata
+      "numPages": 1,
+      "pages": [{"width": 1191, "height": 1684}],
+      "type": "pdf"
+    },
+    "preprocessedImages": []
+  }
 }
 ```
+
+Key points:
+- `result.ocrResults` is an array with one object per page
+- Each page contains `prunedResult` (recognized text, scores, boxes) and image URLs
+- `dataInfo` contains document metadata (page count, dimensions, file type)
 
 ### Error Response (errorCode != 0)
 

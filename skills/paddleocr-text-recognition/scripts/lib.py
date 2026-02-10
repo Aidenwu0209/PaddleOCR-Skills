@@ -265,10 +265,18 @@ def ocr(
 
 def _extract_text(result: dict) -> str:
     """Extract text from OCR result."""
+    # API returns {"errorCode": 0, "result": {"ocrResults": [{page}, ...]}}
+    raw_result = result.get("result", result) if isinstance(result, dict) else result
+
+    # Extract ocrResults array from the result wrapper
+    if isinstance(raw_result, dict):
+        pages = raw_result.get("ocrResults", [])
+    elif isinstance(raw_result, list):
+        pages = raw_result
+    else:
+        pages = []
+
     all_text = []
-    pages = result.get("result", [])
-    if not isinstance(pages, list):
-        pages = [pages]
     for item in pages:
         if not isinstance(item, dict):
             continue
