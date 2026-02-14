@@ -67,9 +67,21 @@ Configuration:
     input_group.add_argument("--file-url", help="URL to document (PDF, PNG, JPG, etc.)")
     input_group.add_argument("--file-path", help="Local file path")
 
+    # Optional input options
+    parser.add_argument(
+        "--file-type",
+        type=int,
+        choices=[0, 1],
+        help="Optional file type override (0=PDF, 1=Image)",
+    )
+
     # Output options
-    parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON output")
-    parser.add_argument("--output", "-o", metavar="FILE", help="Save result to JSON file")
+    parser.add_argument(
+        "--pretty", action="store_true", help="Pretty-print JSON output"
+    )
+    parser.add_argument(
+        "--output", "-o", metavar="FILE", help="Save result to JSON file"
+    )
 
     args = parser.parse_args()
 
@@ -77,6 +89,10 @@ Configuration:
     result = parse_document(
         file_path=args.file_path,
         file_url=args.file_url,
+        file_type=args.file_type,
+        useDocUnwarping=False,
+        useDocOrientationClassify=False,
+        visualize=False,
     )
 
     # Format output

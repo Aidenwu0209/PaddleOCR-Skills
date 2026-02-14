@@ -39,17 +39,17 @@ def print_config_guide():
 HOW TO GET YOUR API CREDENTIALS
 ============================================================
 
-1. Visit: https://paddleocr.com
+1. Visit: https://aistudio.baidu.com/paddleocr
 2. Log in with your Baidu account
-3. Click "API" in the navigation menu
-4. Select your model and copy the API URL
-5. Click your avatar -> "Access Token" -> Copy the token
+3. Open your model's Example Code section
+4. In Example Code, copy the API URL value
+5. In Example Code, copy the Access Token value
 
 Then configure:
   python skills/paddleocr-doc-parsing/scripts/configure.py
 
 Or manually create .env file in project root:
-  PADDLEOCR_DOC_PARSING_API_URL=https://your-api-url.paddleocr.com/v1
+  PADDLEOCR_DOC_PARSING_API_URL=https://your-api-url.paddleocr.com/layout-parsing
   PADDLEOCR_ACCESS_TOKEN=your_token_here
 
 ============================================================
@@ -58,7 +58,9 @@ Or manually create .env file in project root:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="PaddleOCR Document Parsing smoke test")
+    parser = argparse.ArgumentParser(
+        description="PaddleOCR Document Parsing smoke test"
+    )
     parser.add_argument("--test-url", help="Optional: Custom document URL for testing")
     parser.add_argument(
         "--skip-api-test",
@@ -121,7 +123,8 @@ def main():
 
     # Use provided test URL or default
     test_url = (
-        args.test_url or "https://paddleocr.bj.bcebos.com/dataset/document_layout_sample.png"
+        args.test_url
+        or "https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/pp_structure_v3_demo.png"
     )
     print(f"  Test document: {test_url}")
 
@@ -134,7 +137,9 @@ def main():
         print(f"\n  X API call failed: {error.get('message')}")
         if "Authentication" in error.get("message", ""):
             print("\n  Hint: Check if your token is correct and not expired.")
-            print("        Get a new token at: https://paddleocr.com -> Avatar -> Access Token")
+            print(
+                "        Get a new token from the PaddleOCR page example code section."
+            )
         return 1
 
     print("  + API call successful!")
@@ -152,7 +157,9 @@ def main():
     print("=" * 60)
     print("\nNext steps:")
     print('  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL"')
-    print('  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf"')
+    print(
+        '  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf"'
+    )
 
     return 0
 
