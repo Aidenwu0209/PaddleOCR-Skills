@@ -234,6 +234,10 @@ def parse_document(
     except ValueError as e:
         return _error("CONFIG_ERROR", str(e))
 
+    # Normalize Python-style keyword to provider field name.
+    if "file_type" in options and "fileType" not in options:
+        options["fileType"] = options.pop("file_type")
+
     # Build request params
     try:
         if file_url:

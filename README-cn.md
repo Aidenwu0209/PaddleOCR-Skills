@@ -36,13 +36,14 @@
 
 ## 功能对比
 
-| 项目 | paddleocr-text-recognition | paddleocr-doc-parsing |
+| 维度 | paddleocr-text-recognition | paddleocr-doc-parsing |
 |------|----------------------------|-----------------------|
-| 适合场景 | 纯文本提取 | 复杂文档解析 |
-| 输入方式 | URL / 本地文件 | URL / 本地文件 |
-| CLI 脚本 | `ocr_caller.py` | `vl_caller.py` |
-| 输出 | 统一 JSON + 提取文本 | 统一 JSON + 提取文本 |
-| 文件类型覆盖 | 自动识别 | 支持 `--file-type 0/1` 显式指定 |
+| 适合场景 | 纯文本提取 | 复杂版面文档解析 |
+| 提取 `text` 来源 | 按页拼接 `prunedResult.rec_texts` | 优先 `layoutParsingResults[].markdown.text`（兜底拼接 block） |
+| 原始 `result` 粒度 | 行级 OCR（`rec_texts`、`rec_scores`、`rec_boxes`、`rec_polys`） | 页/块级解析（`prunedResult.parsing_res_list`、`markdown`） |
+| CLI 输入 | `--file-url` 或 `--file-path` | `--file-url` 或 `--file-path`，另有 `--file-type {0,1}` |
+| 默认超时 | `PADDLEOCR_TIMEOUT=120` | `PADDLEOCR_DOC_PARSING_TIMEOUT=600` |
+| 大文件辅助脚本 | 无 | 有（`skills/paddleocr-doc-parsing/scripts/optimize_file.py`，仅图片压缩） |
 
 ---
 

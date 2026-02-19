@@ -36,13 +36,14 @@ This repository provides two complementary skills:
 
 ## Feature Comparison
 
-| Feature | paddleocr-text-recognition | paddleocr-doc-parsing |
-|---------|----------------------------|-----------------------|
+| Dimension | paddleocr-text-recognition | paddleocr-doc-parsing |
+|-----------|----------------------------|-----------------------|
 | Best for | Plain text extraction | Complex layout documents |
-| Input | URL or local file | URL or local file |
-| CLI | `ocr_caller.py` | `vl_caller.py` |
-| Output | JSON envelope + extracted text | JSON envelope + extracted text |
-| Optional file type override | No | Yes (`--file-type 0/1`) |
+| Extracted `text` source | `prunedResult.rec_texts` joined by line/page | `layoutParsingResults[].markdown.text` (fallback: concatenated blocks) |
+| Raw `result` granularity | Line-level OCR (`rec_texts`, `rec_scores`, `rec_boxes`, `rec_polys`) | Page/block-level parsing (`prunedResult.parsing_res_list`, `markdown`) |
+| CLI input | `--file-url` or `--file-path` | `--file-url` or `--file-path`, plus `--file-type {0,1}` |
+| Default timeout | `PADDLEOCR_TIMEOUT=120` | `PADDLEOCR_DOC_PARSING_TIMEOUT=600` |
+| Large-file helper script | No | Yes (`skills/paddleocr-doc-parsing/scripts/optimize_file.py`, image optimization) |
 
 ---
 
