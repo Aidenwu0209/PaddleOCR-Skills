@@ -19,8 +19,8 @@ PaddleOCR Text Recognition Caller
 Simple CLI wrapper for the PaddleOCR text recognition library.
 
 Usage:
-    python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "URL"
-    python scripts/paddleocr-text-recognition/ocr_caller.py --file-path "image.png" --pretty
+    python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL"
+    python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "image.png" --pretty
 """
 
 import argparse
@@ -47,16 +47,16 @@ def main():
         epilog="""
 Examples:
   # OCR from URL
-  python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "https://example.com/image.png"
+  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "https://example.com/image.png"
 
   # OCR local file
-  python scripts/paddleocr-text-recognition/ocr_caller.py --file-path "./document.pdf" --pretty
+  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "./document.pdf" --pretty
 
   # Save result to file
-  python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "URL" --output result.json
+  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL" --output result.json
 
 Configuration:
-  Run: python scripts/paddleocr-text-recognition/configure.py
+  Run: python skills/paddleocr-text-recognition/scripts/configure.py
   Or set in .env: PADDLEOCR_OCR_API_URL, PADDLEOCR_ACCESS_TOKEN
         """,
     )

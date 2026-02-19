@@ -364,7 +364,9 @@ Examples:
     print("=" * 60)
     print("\nYou can now use the OCR function:")
     print(f"  cd {project_root}")
-    print('  python scripts/ocr_caller.py --file-url "https://example.com/image.jpg"')
+    print(
+        '  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "https://example.com/image.jpg"'
+    )
     print("\nTo reconfigure, run this script again.")
     print("=" * 60 + "\n")
 

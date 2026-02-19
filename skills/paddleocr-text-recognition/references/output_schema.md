@@ -1,4 +1,4 @@
-# PaddleOCR Text Recognition Output Schema
+﻿# PaddleOCR Text Recognition Output Schema
 
 This document defines the output format returned by `ocr_caller.py`, based on the actual PaddleOCR Text Recognition API response.
 
@@ -116,7 +116,7 @@ The `result` field contains the complete raw API response:
 import json, subprocess
 
 result = subprocess.run(
-    ["python", "scripts/paddleocr-text-recognition/ocr_caller.py", "--file-url", "URL", "--pretty"],
+    ["python", "skills/paddleocr-text-recognition/scripts/ocr_caller.py", "--file-url", "URL", "--pretty"],
     capture_output=True, text=True
 )
 data = json.loads(result.stdout)
@@ -139,13 +139,13 @@ else:
 
 ```bash
 # Basic OCR
-python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "URL" --pretty
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL" --pretty
 
 # OCR local file
-python scripts/paddleocr-text-recognition/ocr_caller.py --file-path "doc.pdf" --pretty
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "doc.pdf" --pretty
 
 # Save to file
-python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "URL" --output result.json
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL" --output result.json
 ```
 
 ## Exit Codes
@@ -154,3 +154,4 @@ python scripts/paddleocr-text-recognition/ocr_caller.py --file-url "URL" --outpu
 |------|---------|
 | 0 | Success |
 | 1 | Error (check `error` field) |
+

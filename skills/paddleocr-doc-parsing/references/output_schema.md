@@ -1,4 +1,4 @@
-# PaddleOCR Document Parsing Output Schema
+﻿# PaddleOCR Document Parsing Output Schema
 
 This document defines the output envelope returned by `vl_caller.py`.
 
@@ -87,11 +87,12 @@ Raw fields may vary by model version and endpoint.
 
 ```bash
 # Parse document from URL
-python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --pretty
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --pretty
 
 # Parse local file
-python scripts/paddleocr-doc-parsing/vl_caller.py --file-path "doc.pdf" --pretty
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf" --pretty
 
 # Save result to file
-python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --output result.json
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --output result.json
 ```
+

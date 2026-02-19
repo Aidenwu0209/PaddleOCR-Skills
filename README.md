@@ -1,11 +1,11 @@
-# PaddleOCR-SKILLs
+﻿# PaddleOCR-Skills
 
 <p align="center">
-  <strong>Multi-Model OCR Skills Suite for Claude Code</strong>
+  <strong>OCR Skills Suite for Claude Code</strong>
 </p>
 
 <p align="center">
-  Intelligent text extraction and document parsing powered by Baidu PaddlePaddle
+  Text recognition and document parsing powered by PaddleOCR APIs
 </p>
 
 <p align="center">
@@ -20,256 +20,186 @@
 
 ---
 
-## 🎯 Two Skills, One Solution
+## Overview
 
-This repository provides two complementary OCR skills for different document processing needs:
+This repository provides two complementary skills:
 
-### 1. paddleocr-text-recognition - Fast Text Extraction
+1. `paddleocr-text-recognition`
+- Fast OCR for images and PDFs
+- Returns unified JSON: `ok`, `text`, `result`, `error`
 
-**Best for**: Simple text recognition from images and PDFs
-
-- ⚡ **Fast Recognition** - 3 quality modes (fast/quality/auto)
-- 📝 **80+ Languages** - Comprehensive multilingual support
-- 🎛️ **Adaptive Quality** - Automatic retry with progressive quality enhancement
-- 📊 **Quality Scoring** - Built-in confidence metrics
-
-**Use when**: You need quick text extraction from screenshots, scans, or simple documents
-
-### 2. paddleocr-doc-parsing - Advanced Document Parsing
-
-**Best for**: Complex documents with tables, formulas, and structured layouts
-
-- 📊 **Table Recognition** - Extract structured data from tables
-- 🔢 **Formula Detection** - Recognize mathematical equations (LaTeX output)
-- 📐 **Layout Analysis** - Automatic document structure detection
-- 🌍 **109 Languages** - Enhanced multilingual capabilities
-- 📄 **Structured Output** - JSON or Markdown format
-
-**Use when**: You need to parse invoices, academic papers, financial reports, or any document with complex structure
+2. `paddleocr-doc-parsing`
+- Advanced layout parsing for complex documents
+- Extracts full text plus raw structured parsing result
 
 ---
 
-## 📦 Installation
+## Feature Comparison
 
-> **Prerequisites**: Node.js >= 14, Python 3.8+, [Claude Code CLI](https://claude.ai/code)
+| Feature | paddleocr-text-recognition | paddleocr-doc-parsing |
+|---------|----------------------------|-----------------------|
+| Best for | Plain text extraction | Complex layout documents |
+| Input | URL or local file | URL or local file |
+| CLI | `ocr_caller.py` | `vl_caller.py` |
+| Output | JSON envelope + extracted text | JSON envelope + extracted text |
+| Optional file type override | No | Yes (`--file-type 0/1`) |
 
-### Install Skills
+---
+
+## Installation
+
+> Prerequisites: Node.js >= 14, Python 3.8+, [Claude Code CLI](https://claude.ai/code)
 
 Install all skills:
+
 ```bash
 npx skills add Aidenwu0209/PaddleOCR-Skills
 ```
 
-Install a specific skill:
-```bash
-# Text recognition only
-npx skills add Aidenwu0209/PaddleOCR-Skills --skill paddleocr-text-recognition
+Install one skill only:
 
-# Document parsing only
+```bash
+npx skills add Aidenwu0209/PaddleOCR-Skills --skill paddleocr-text-recognition
 npx skills add Aidenwu0209/PaddleOCR-Skills --skill paddleocr-doc-parsing
 ```
 
-After installation, the installer will prompt you to select which AI agents to install to (Claude Code, Cursor, Cline, etc.).
-
-### Configure API Credentials
-
-Get your API credentials at [Paddle AI Studio](https://paddleocr.com), then configure:
-
-**paddleocr-text-recognition:**
-```bash
-python ~/.claude/skills/paddleocr-text-recognition/scripts/configure.py
-```
-
-**paddleocr-doc-parsing:**
-```bash
-python ~/.claude/skills/paddleocr-doc-parsing/scripts/configure.py
-```
-
-<details>
-<summary>Alternative: Manual Installation</summary>
+Manual install:
 
 ```bash
 git clone https://github.com/Aidenwu0209/PaddleOCR-Skills.git
 cd PaddleOCR-Skills
 
-# paddleocr-text-recognition
 pip install -r skills/paddleocr-text-recognition/scripts/requirements.txt
-python skills/paddleocr-text-recognition/scripts/configure.py
-
-# paddleocr-doc-parsing
 pip install -r skills/paddleocr-doc-parsing/scripts/requirements.txt
+```
+
+---
+
+## Configuration
+
+Get API credentials at [Paddle AI Studio](https://paddleocr.com), then run:
+
+```bash
+python skills/paddleocr-text-recognition/scripts/configure.py
 python skills/paddleocr-doc-parsing/scripts/configure.py
 ```
 
-</details>
+Core environment variables:
 
----
-
-## 🚀 Quick Start
-
-After installation, just describe your need in natural language:
-
-**Simple text extraction**:
-> "Extract text from this image: screenshot.png"
-
-Claude will use **paddleocr-text-recognition** for fast text recognition.
-
-**Complex document parsing**:
-> "Parse this invoice table: invoice.pdf"
-
-Claude will use **paddleocr-doc-parsing** for structured data extraction.
-
----
-
-## 📊 Feature Comparison
-
-| Feature | paddleocr-text-recognition | paddleocr-doc-parsing |
-|---------|:--------:|:------------:|
-| **Primary Use Case** | Text extraction | Document parsing |
-| **Speed** | Fast ⚡ | Medium 🐢 |
-| **Languages** | 80+ | 109 |
-| **Quality Modes** | 3 modes | Auto |
-| **Table Recognition** | ❌ | ✅ |
-| **Formula Detection** | ❌ | ✅ |
-| **Layout Analysis** | ❌ | ✅ |
-| **Output Format** | Plain text + JSON | JSON / Markdown |
-| **Best For** | Screenshots, scans | Invoices, papers |
-
----
-
-## 📚 Documentation
-
-### paddleocr-text-recognition Documentation
-- [Skill Guide](./skills/paddleocr-text-recognition/SKILL.md) - How to use paddleocr-text-recognition
-- [Output Schema](./skills/paddleocr-text-recognition/references/output_schema.md) - Output format specification
-- [Provider API](./skills/paddleocr-text-recognition/references/provider_api.md) - API contract details
-
-### paddleocr-doc-parsing Documentation
-- [Skill Guide](./skills/paddleocr-doc-parsing/SKILL.md) - How to use paddleocr-doc-parsing
-- [Output Schema](./skills/paddleocr-doc-parsing/references/output_schema.md) - Output format specification
-- [Provider API](./skills/paddleocr-doc-parsing/references/provider_api.md) - API contract details
-
-> **Note**: Model versions and capabilities are determined by the API endpoint. Get the latest API at [Paddle AI Studio](https://paddleocr.com).
-
----
-
-## 🔍 Which Skill Should I Use?
-
-```
-┌─────────────────────────────────────┐
-│  What do you need to extract?      │
-└───────────┬─────────────────────────┘
-            │
-    ┌───────┴────────┐
-    │  Just text?    │
-    └───┬────────┬───┘
-        │        │
-       Yes      No
-        │        │
-        ▼        ▼
-   text-       ┌──────────────────────┐
-   recognition │ Tables / Formulas /  │
-               │ Complex Layout?      │
-               └──────┬───────────────┘
-                      │
-                     Yes
-                      │
-                      ▼
-                doc-parsing
-```
-
-### Quick Selection Guide
-
-| Your Task | Recommended Skill |
-|-----------|------------------|
-| "Extract text from this screenshot" | **paddleocr-text-recognition** |
-| "Read text from this scanned document" | **paddleocr-text-recognition** |
-| "Parse this invoice table" | **paddleocr-doc-parsing** |
-| "Extract data from this financial report" | **paddleocr-doc-parsing** |
-| "Get text from this academic paper with formulas" | **paddleocr-doc-parsing** |
-| "Quick OCR of a photo" | **paddleocr-text-recognition** |
-
----
-
-## 🧪 Testing
-
-**Test paddleocr-text-recognition**:
 ```bash
-python skills/paddleocr-text-recognition/scripts/smoke_test.py
+PADDLEOCR_OCR_API_URL=
+PADDLEOCR_DOC_PARSING_API_URL=
+PADDLEOCR_ACCESS_TOKEN=
 ```
 
-**Test paddleocr-doc-parsing**:
+Optional timeouts used by current code:
+
 ```bash
-python skills/paddleocr-doc-parsing/scripts/smoke_test.py
+PADDLEOCR_TIMEOUT=120
+PADDLEOCR_DOC_PARSING_TIMEOUT=600
 ```
 
 ---
 
-## 💡 Usage Examples
+## Quick Start
 
-### paddleocr-text-recognition Examples
+Text recognition:
 
-**Basic text extraction**:
 ```bash
-python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "https://example.com/image.jpg" --pretty
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
+  --file-path "./doc.png" \
+  --pretty
 ```
 
-**Fast mode for clear images**:
+Document parsing:
+
 ```bash
-python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "screenshot.png" --preset fast
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./invoice.pdf" \
+  --pretty
 ```
 
-**High quality mode**:
-```bash
-python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "scan.pdf" --preset quality
-```
+Save output to file:
 
-### paddleocr-doc-parsing Examples
-
-**Parse document with tables**:
 ```bash
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "invoice.pdf" --pretty
-```
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
+  --file-url "https://example.com/image.jpg" \
+  --output result.json \
+  --pretty
 
-**Extract as Markdown**:
-```bash
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --format markdown --pretty
-```
-
-**Save result to file**:
-```bash
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "document.pdf" --output result.json
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-url "https://example.com/document.pdf" \
+  --output result.json \
+  --pretty
 ```
 
 ---
 
-## 🤝 Contributing
+## Output Contract
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Both CLIs return the same envelope:
+
+```json
+{
+  "ok": true,
+  "text": "...",
+  "result": { "...": "raw provider response" },
+  "error": null
+}
+```
+
+On error:
+
+```json
+{
+  "ok": false,
+  "text": "",
+  "result": null,
+  "error": { "code": "API_ERROR", "message": "..." }
+}
+```
 
 ---
 
-## 📄 License
+## Large Files
+
+For large files with document parsing:
+
+- Prefer `--file-url` to avoid local base64 overhead.
+- For large images, use `skills/paddleocr-doc-parsing/scripts/optimize_file.py`.
+- For large PDFs, extract needed pages first, then parse.
+
+See:
+- [Quick Reference](./docs/QUICK_REFERENCE.md)
+- [Large File Guide](./docs/LARGE_FILES.md)
+
+---
+
+## Testing
+
+```bash
+python skills/paddleocr-text-recognition/scripts/smoke_test.py --skip-api-test
+python skills/paddleocr-doc-parsing/scripts/smoke_test.py --skip-api-test
+```
+
+---
+
+## Documentation
+
+- [Text Recognition Skill Guide](./skills/paddleocr-text-recognition/SKILL.md)
+- [Text Recognition Output Schema](./skills/paddleocr-text-recognition/references/output_schema.md)
+- [Doc Parsing Skill Guide](./skills/paddleocr-doc-parsing/SKILL.md)
+- [Doc Parsing Output Schema](./skills/paddleocr-doc-parsing/references/output_schema.md)
+
+---
+
+## License
 
 [MIT License](./LICENSE)
 
 ---
 
-## 🙏 Acknowledgments
+## Support
 
-- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - Baidu's PaddlePaddle OCR toolkit
-- [Paddle AI Studio](https://paddleocr.com) - API service provider
-
----
-
-## 📮 Support
-
-- **Issues**: [GitHub Issues](https://github.com/Aidenwu0209/PaddleOCR-SKILLs/issues)
-- **Documentation**: See the [skills](./skills/) directory
-- **API Status**: [Paddle AI Studio](https://paddleocr.com)
-
----
-
-<p align="center">
-  Made with ❤️ for Claude Code
-</p>
+- Issues: [GitHub Issues](https://github.com/Aidenwu0209/PaddleOCR-Skills/issues)
+- API service: [Paddle AI Studio](https://paddleocr.com)

@@ -19,9 +19,9 @@ PaddleOCR Document Parser
 Simple CLI wrapper for the PaddleOCR document parsing library.
 
 Usage:
-    python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL"
-    python scripts/paddleocr-doc-parsing/vl_caller.py --file-path "document.pdf"
-    python scripts/paddleocr-doc-parsing/vl_caller.py --file-path "doc.pdf" --pretty
+    python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL"
+    python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "document.pdf"
+    python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf" --pretty
 """
 
 import argparse
@@ -48,16 +48,16 @@ def main():
         epilog="""
 Examples:
   # Parse document from URL
-  python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "https://example.com/document.pdf"
+  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "https://example.com/document.pdf"
 
   # Parse local file
-  python scripts/paddleocr-doc-parsing/vl_caller.py --file-path "./invoice.pdf"
+  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "./invoice.pdf"
 
   # Save result to file
-  python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --output result.json --pretty
+  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --output result.json --pretty
 
 Configuration:
-  Run: python scripts/paddleocr-doc-parsing/configure.py
+  Run: python skills/paddleocr-doc-parsing/scripts/configure.py
   Or set in .env: PADDLEOCR_DOC_PARSING_API_URL, PADDLEOCR_ACCESS_TOKEN
         """,
     )

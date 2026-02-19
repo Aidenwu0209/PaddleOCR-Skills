@@ -266,10 +266,14 @@ Get your API credentials at: https://paddleocr.com
     print()
     print("Next steps:")
     print("  1. Test the configuration:")
-    print("     python scripts/paddleocr-doc-parsing/smoke_test.py")
+    print(
+        "     python skills/paddleocr-doc-parsing/scripts/smoke_test.py"
+    )
     print()
     print("  2. Try parsing a document:")
-    print('     python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL"')
+    print(
+        '     python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL"'
+    )
     print()
 
 

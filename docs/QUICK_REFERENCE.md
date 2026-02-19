@@ -1,209 +1,145 @@
-# PaddleOCR-VL 快速参考卡片
+﻿# PaddleOCR Skills 快速参考
 
-## 🚨 大文件问题？
+## 技能选择
 
-文件大于20MB？选择最适合你的方案：
+| 需求 | 推荐技能 | 命令 |
+|------|----------|------|
+| 快速提取文本（截图、照片、扫描件） | `paddleocr-text-recognition` | `ocr_caller.py` |
+| 解析复杂文档（多栏、表格、图文混排） | `paddleocr-doc-parsing` | `vl_caller.py` |
 
+---
+
+## 常用命令
+
+### 1) 配置凭证
+
+```bash
+python skills/paddleocr-text-recognition/scripts/configure.py
+python skills/paddleocr-doc-parsing/scripts/configure.py
 ```
-┌─────────────────────────────────────────────────┐
-│ 你的情况是？                                      │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│ □ 文件可以上传到网上                             │
-│   → 使用 --file-url (最简单！)                   │
-│   → 无大小限制                                   │
-│                                                 │
-│ □ 文件只是稍微超限（25-40MB）                     │
-│   → 设置 VL_MAX_FILE_SIZE_MB=50                 │
-│   → 30秒解决                                    │
-│                                                 │
-│ □ 图片或PDF包含图片                              │
-│   → 使用优化工具                                 │
-│   → 通常减少50-70%                              │
-│                                                 │
-│ □ 大PDF但只需部分页面                            │
-│   → 提取特定页面                                 │
-│   → 按需处理                                    │
-│                                                 │
-│ □ 超大文件 (>100MB)                             │
-│   → 上传云存储                                  │
-│   → 使用公共URL                                 │
-│                                                 │
-└─────────────────────────────────────────────────┘
+
+### 2) 冒烟测试
+
+```bash
+python skills/paddleocr-text-recognition/scripts/smoke_test.py --skip-api-test
+python skills/paddleocr-doc-parsing/scripts/smoke_test.py --skip-api-test
+```
+
+### 3) 文本识别
+
+```bash
+# URL
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
+  --file-url "https://example.com/image.jpg" \
+  --pretty
+
+# 本地文件
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
+  --file-path "./doc.pdf" \
+  --pretty
+
+# 输出到 JSON 文件
+python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
+  --file-path "./doc.pdf" \
+  --output "./result_text.json" \
+  --pretty
+```
+
+### 4) 文档解析
+
+```bash
+# URL
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-url "https://example.com/document.pdf" \
+  --pretty
+
+# 本地文件
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./invoice.pdf" \
+  --pretty
+
+# 显式指定文件类型（可选）
+# --file-type 0: PDF
+# --file-type 1: Image
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./invoice.pdf" \
+  --file-type 0 \
+  --pretty
+
+# 输出到 JSON 文件
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./invoice.pdf" \
+  --output "./result_doc.json" \
+  --pretty
 ```
 
 ---
 
-## ⚡ 1分钟解决方案
+## 输出结构（两个技能一致）
 
-### 方案A: URL上传（90%的情况适用）
-
-```bash
-# 上传到任何可访问URL
-# 然后：
-python scripts/paddleocr-vl/vl_caller.py \
-  --file-url "https://your-url/file.pdf"
+```json
+{
+  "ok": true,
+  "text": "...",
+  "result": { "...": "raw response" },
+  "error": null
+}
 ```
 
-### 方案B: 提高限制（最快）
+错误时：
 
-```bash
-echo "VL_MAX_FILE_SIZE_MB=50" >> .env
-# 完成！
-```
-
-### 方案C: 压缩文件（最彻底）
-
-```bash
-# 安装（仅需一次）
-pip install Pillow PyMuPDF
-
-# 优化
-python scripts/paddleocr-vl/optimize_file.py input.pdf output.pdf
-
-# 处理
-python scripts/paddleocr-vl/vl_caller.py --file-path output.pdf
+```json
+{
+  "ok": false,
+  "text": "",
+  "result": null,
+  "error": {
+    "code": "CONFIG_ERROR",
+    "message": "..."
+  }
+}
 ```
 
 ---
 
-## 📋 命令速查
+## 大文件快速处理
 
-### 基本使用
+### 优先方案：`--file-url`
+
 ```bash
-# 处理URL文件
-python scripts/paddleocr-vl/vl_caller.py --file-url "URL"
-
-# 处理本地文件
-python scripts/paddleocr-vl/vl_caller.py --file-path "file.pdf"
-
-# 显示质量评估
-python scripts/paddleocr-vl/vl_caller.py --file-path "file.pdf" --show-quality
-
-# 禁用缓存
-python scripts/paddleocr-vl/vl_caller.py --file-path "file.pdf" --no-cache
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-url "https://your-server.com/large.pdf" \
+  --pretty
 ```
 
-### 文件优化
+### 大图片压缩（仅图片）
+
+> `optimize_file.py` 仅支持图片格式：PNG/JPG/JPEG/BMP/TIFF/TIF
+
 ```bash
-# 压缩图片（质量85）
-python scripts/paddleocr-vl/optimize_file.py input.png output.png
+pip install -r skills/paddleocr-doc-parsing/scripts/requirements-optimize.txt
 
-# 高压缩（质量70）
-python scripts/paddleocr-vl/optimize_file.py input.jpg output.jpg --quality 70
+python skills/paddleocr-doc-parsing/scripts/optimize_file.py \
+  large.png \
+  large_optimized.jpg \
+  --quality 80 \
+  --target-size 20
 
-# 压缩PDF
-python scripts/paddleocr-vl/optimize_file.py input.pdf output.pdf
-
-# 目标特定大小（15MB）
-python scripts/paddleocr-vl/optimize_file.py input.pdf output.pdf --target-size 15
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./large_optimized.jpg" \
+  --pretty
 ```
 
-### 配置管理
+### 大 PDF 按页拆分后再解析
+
 ```bash
-# 初次配置
-python scripts/paddleocr-vl/configure.py
+pip install pypdfium2
 
-# 测试配置
-python scripts/paddleocr-vl/smoke_test.py
+python -c "import pypdfium2 as pdfium; d=pdfium.PdfDocument('large.pdf'); n=pdfium.PdfDocument.new(); n.import_pages(d, list(range(min(10, len(d))))); n.save('first_10_pages.pdf')"
 
-# 修改大小限制
-echo "VL_MAX_FILE_SIZE_MB=50" >> .env
+python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
+  --file-path "./first_10_pages.pdf" \
+  --pretty
 ```
 
----
-
-## 🎯 决策树
-
-```
-文件大小？
-  │
-  ├─ ≤20MB
-  │   └─ 直接处理 ✓
-  │
-  ├─ 20-40MB
-  │   ├─ 有URL？
-  │   │   └─ 用 --file-url ⭐
-  │   └─ 无URL？
-  │       ├─ 能压缩？用优化工具
-  │       └─ 不能压缩？提高限制
-  │
-  ├─ 40-100MB
-  │   ├─ PDF？
-  │   │   ├─ 提取部分页面
-  │   │   └─ 压缩优化
-  │   └─ 图片？
-  │       └─ 压缩优化（效果明显）
-  │
-  └─ >100MB
-      └─ 上传云存储 + URL ⭐
-```
-
----
-
-## 💡 常见场景
-
-### 场景1: 30MB 发票PDF
-```bash
-# 最佳方案：压缩
-python scripts/paddleocr-vl/optimize_file.py invoice.pdf invoice_small.pdf
-# 结果：通常 8-12MB
-```
-
-### 场景2: 50MB 产品图片
-```bash
-# 最佳方案：转JPEG + 压缩
-python scripts/paddleocr-vl/optimize_file.py product.png product.jpg --quality 80
-# 结果：通常 5-10MB
-```
-
-### 场景3: 150MB 技术文档
-```bash
-# 最佳方案：上传URL
-# 1. 上传到云存储
-# 2. 获取公共URL
-# 3. 处理：
-python scripts/paddleocr-vl/vl_caller.py --file-url "https://storage/doc.pdf"
-```
-
----
-
-## 🔍 故障排查
-
-### 问题：仍然显示文件太大
-```bash
-# 检查配置
-cat .env | grep VL_MAX
-
-# 如果没有，添加：
-echo "VL_MAX_FILE_SIZE_MB=50" >> .env
-```
-
-### 问题：优化工具报错
-```bash
-# 安装依赖
-pip install -r scripts/paddleocr-vl/requirements-optimize.txt
-```
-
-### 问题：压缩后质量下降
-```bash
-# 使用更高质量
-python scripts/paddleocr-vl/optimize_file.py input.jpg output.jpg --quality 90
-```
-
-### 问题：URL也失败
-原因：API服务器也有限制
-解决：先压缩，再上传URL
-
----
-
-## 📞 获取帮助
-
-详细文档：[docs/LARGE_FILES.md](./LARGE_FILES.md)
-
----
-
-**记住这三招就够了**：
-1. **有URL？用URL！** 🌐
-2. **能压缩？压缩！** 📦
-3. **不行？提限制！** ⚙️
+更多说明见：[LARGE_FILES.md](./LARGE_FILES.md)
