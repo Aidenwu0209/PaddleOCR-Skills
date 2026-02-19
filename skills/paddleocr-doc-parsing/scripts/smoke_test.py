@@ -39,7 +39,7 @@ def print_config_guide():
 HOW TO GET YOUR API CREDENTIALS
 ============================================================
 
-1. Visit: https://aistudio.baidu.com/paddleocr
+1. Visit: https://paddleocr.com
 2. Log in with your Baidu account
 3. Open your model's Example Code section
 4. In Example Code, copy the API URL value
