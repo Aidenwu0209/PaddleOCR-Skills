@@ -1,4 +1,4 @@
-﻿# PaddleOCR Document Parsing Output Schema
+# PaddleOCR Document Parsing Output Schema
 
 This document defines the output envelope returned by `vl_caller.py`.
 

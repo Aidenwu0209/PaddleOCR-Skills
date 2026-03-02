@@ -1,4 +1,4 @@
-﻿# 大文件处理指南（paddleocr-doc-parsing）
+# 大文件处理指南（paddleocr-doc-parsing）
 
 本指南针对 `skills/paddleocr-doc-parsing/scripts/vl_caller.py`。
 

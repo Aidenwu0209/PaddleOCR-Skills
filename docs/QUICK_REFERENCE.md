@@ -1,4 +1,4 @@
-﻿# PaddleOCR Skills 快速参考
+# PaddleOCR Skills 快速参考
 
 ## 技能选择
 

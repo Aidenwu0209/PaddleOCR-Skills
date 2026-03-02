@@ -1,4 +1,4 @@
-﻿# PaddleOCR Text Recognition Output Schema
+# PaddleOCR Text Recognition Output Schema
 
 This document defines the output format returned by `ocr_caller.py`, based on the actual PaddleOCR Text Recognition API response.
 

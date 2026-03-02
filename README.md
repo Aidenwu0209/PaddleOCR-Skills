@@ -1,4 +1,4 @@
-﻿# PaddleOCR-Skills
+# PaddleOCR-Skills
 
 <p align="center">
   <strong>OCR Skills Suite for Claude Code</strong>
