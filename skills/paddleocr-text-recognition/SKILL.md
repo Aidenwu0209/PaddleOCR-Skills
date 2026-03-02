@@ -12,7 +12,7 @@ description: >
 Invoke this skill in the following situations:
 - Extract text from images (screenshots, photos, scans, charts)
 - Read text from PDFs or document images
-- Parse structured text content (invoices, receipts, forms, tables)
+- Extract text from structured documents (invoices, receipts, forms)
 - Extract text from URLs or local files pointing to images/PDFs
 
 Do not use this skill in the following situations:

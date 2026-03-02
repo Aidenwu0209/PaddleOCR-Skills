@@ -76,6 +76,10 @@ If the script execution fails (API not configured, network error, etc.):
    - Seals and stamps
    - Layout and reading order
 
+   > **Note**: The actual content types that can be parsed depend on the model
+   > configured at your API endpoint (PADDLEOCR_DOC_PARSING_API_URL).
+   > The list above represents the maximum set of supported types.
+
 3. **Extract what the user needs** from the complete data based on their request.
 
 ### IMPORTANT: Complete Content Display
@@ -90,7 +94,7 @@ If the script execution fails (API not configured, network error, etc.):
 
 **What this means**:
 - ✅ **DO**: Display complete text, all tables, all formulas as requested
-- ✅ **DO**: Present content in reading order using `reading_order` array
+- ✅ **DO**: Present content in the order provided by the API
 - ❌ **DON'T**: Truncate with "..." unless content is excessively long (>10,000 chars)
 - ❌ **DON'T**: Summarize or provide excerpts when user asks for full content
 - ❌ **DON'T**: Say "Here's a preview" when user expects complete output
@@ -100,7 +104,7 @@ If the script execution fails (API not configured, network error, etc.):
 User: "Extract all the text from this document"
 Claude: I've parsed the complete document. Here's all the extracted text:
 
-[Display entire text field or concatenated regions in reading order]
+[Display the entire text field]
 
 Document Statistics:
 - Total regions: 25
@@ -127,16 +131,10 @@ The script returns a JSON envelope wrapping the raw API result:
   "text": "Full markdown/HTML text extracted from all pages",
   "result": [
     {
-      "prunedResult": {
-        "parsing_res_list": [
-          {"block_label": "text", "block_content": "Paragraph text content here...", "block_bbox": [100, 200, 500, 230], "block_id": 3},
-          {"block_label": "table", "block_content": "<table>...</table>", "block_bbox": [50, 300, 900, 600], "block_id": 5},
-          {"block_label": "seal", "block_content": "<img .../>", "block_bbox": [400, 50, 600, 180], "block_id": 2}
-        ]
-      },
+      "prunedResult": { ... },  // layout element positions, content, confidence
       "markdown": {
         "text": "Full page content in markdown/HTML format",
-        "images": {"imgs/filename.jpg": "https://..."}
+        "images": { ... }
       }
     }
   ],
@@ -146,34 +144,18 @@ The script returns a JSON envelope wrapping the raw API result:
 
 **Key fields**:
 - `text` — extracted markdown text from all pages (use this for quick text display)
-- `result` — raw API result array (one object per page), for detailed block-level access
-- `result[n].prunedResult.parsing_res_list` — array of detected content blocks
-- `result[n].markdown.text` — full page content in markdown/HTML
-
-### Block Labels
-
-The `block_label` field indicates the content type:
-
-| Label | Description |
-|-------|-------------|
-| `text` | Regular text content |
-| `table` | Table (content is HTML `<table>`) |
-| `image` | Embedded image |
-| `seal` | Seal or stamp |
-| `figure_title` | Figure/chart title or caption |
-| `vision_footnote` | Footnote detected by vision model |
-| `aside_text` | Side/margin text |
+- `result` — raw API result array (one object per page)
+- `result[n].prunedResult` — layout element positions, content, and confidence scores
+- `result[n].markdown` — full page content in markdown/HTML format
 
 ### Content Extraction Guidelines
-
-**Based on user intent, filter the blocks**:
 
 | User Says | What to Extract | How |
 |-----------|-----------------|-----|
 | "Extract all text" | Everything | Use `text` field directly |
-| "Get all tables" | table blocks only | Filter `parsing_res_list` by `block_label == "table"` |
-| "Show main content" | text + table blocks | Filter out `aside_text`, `image` |
-| "Complete document" | Everything | Use `text` field or iterate all blocks |
+| "Get all tables" | Tables only | Look for `<table>` in the markdown text |
+| "Show main content" | Main body text | Use `text` field, filter as needed |
+| "Complete document" | Everything | Use `text` field |
 
 ### Usage Examples
 
@@ -184,9 +166,7 @@ python scripts/vl_caller.py \
   --pretty
 ```
 
-Then filter JSON to extract core content:
-- Include: text, table, formula, figure, footnote
-- Exclude: header, footer, page_number
+Then use the `text` field for main content display.
 
 **Example 2: Extract Tables Only**
 ```bash
@@ -195,9 +175,7 @@ python scripts/vl_caller.py \
   --pretty
 ```
 
-Then filter JSON:
-- Only keep regions where type="table"
-- Present table content in markdown format
+Then look for `<table>` content in the result to extract tables.
 
 **Example 3: Complete Document with Everything**
 ```bash
@@ -206,7 +184,7 @@ python scripts/vl_caller.py \
   --pretty
 ```
 
-Then use the `text` field or present all regions in reading_order.
+Then use the `text` field or iterate the full result.
 
 ### First-Time Configuration
 
@@ -284,7 +262,7 @@ python scripts/vl_caller.py --file-path "pages_1_5.pdf"
 
 ### Error Handling
 
-**Authentication failed (401/403)**:
+**Authentication failed (403)**:
 ```
 error: Authentication failed
 ```
@@ -301,35 +279,6 @@ error: API quota exceeded
 error: Unsupported file format
 ```
 → File format not supported, convert to PDF/PNG/JPG
-
-### Pseudo-Code: Content Extraction
-
-**Extract all text** (most common):
-```python
-def extract_all_text(json_response):
-    # Quickest: use the pre-extracted text field
-    print(json_response['text'])
-```
-
-**Extract tables only**:
-```python
-def extract_tables(json_response):
-    for page in json_response['result']:
-        blocks = page['prunedResult']['parsing_res_list']
-        tables = [b for b in blocks if b['block_label'] == 'table']
-        for i, table in enumerate(tables):
-            print(f"Table {i+1}:")
-            print(table['block_content'])  # HTML table
-```
-
-**Iterate all blocks**:
-```python
-def extract_by_block(json_response):
-    for page in json_response['result']:
-        blocks = page['prunedResult']['parsing_res_list']
-        for block in blocks:
-            print(f"[{block['block_label']}] {block['block_content'][:100]}")
-```
 
 ## Important Notes
 
