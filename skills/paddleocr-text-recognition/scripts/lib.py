@@ -87,7 +87,9 @@ def get_config() -> tuple[str, str]:
     token = _get_env("PADDLEOCR_ACCESS_TOKEN", "PADDLEOCR_TOKEN", "PADDLE_OCR_TOKEN")
 
     if not api_url:
-        raise ValueError(f"PADDLEOCR_OCR_API_URL not configured. Get your API at: {API_GUIDE_URL}")
+        raise ValueError(
+            f"PADDLEOCR_OCR_API_URL not configured. Get your API at: {API_GUIDE_URL}"
+        )
     if not token:
         raise ValueError(
             f"PADDLEOCR_ACCESS_TOKEN not configured. Get your API at: {API_GUIDE_URL}"
@@ -166,7 +168,9 @@ def _make_api_request(api_url: str, token: str, params: dict) -> dict:
 
     # Handle HTTP errors
     if resp.status_code == 401 or resp.status_code == 403:
-        raise RuntimeError(f"Authentication failed ({resp.status_code}). Check your token.")
+        raise RuntimeError(
+            f"Authentication failed ({resp.status_code}). Check your token."
+        )
     elif resp.status_code == 429:
         raise RuntimeError("API rate limit exceeded (429)")
     elif resp.status_code >= 500:

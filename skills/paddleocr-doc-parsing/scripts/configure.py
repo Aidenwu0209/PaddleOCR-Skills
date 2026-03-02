@@ -32,7 +32,9 @@ import sys
 from pathlib import Path
 
 
-def save_config(api_url: str, token: str, project_root: Path, quiet: bool = False) -> bool:
+def save_config(
+    api_url: str, token: str, project_root: Path, quiet: bool = False
+) -> bool:
     """
     Save configuration to .env file
 
@@ -119,7 +121,9 @@ Examples:
 Get your API credentials at: https://paddleocr.com
         """,
     )
-    parser.add_argument("--api-url", help="Document parsing API URL (non-interactive mode)")
+    parser.add_argument(
+        "--api-url", help="Document parsing API URL (non-interactive mode)"
+    )
     parser.add_argument("--token", help="Access token (non-interactive mode)")
     parser.add_argument("--quiet", action="store_true", help="Suppress output messages")
 
@@ -148,7 +152,9 @@ Get your API credentials at: https://paddleocr.com
             # Save configuration (CLI mode always overwrites without asking)
             if save_config(api_url, token, project_root, quiet=True):
                 if not args.quiet:
-                    masked_token = token[:8] + "..." + token[-4:] if len(token) > 12 else "***"
+                    masked_token = (
+                        token[:8] + "..." + token[-4:] if len(token) > 12 else "***"
+                    )
                     print("\n[OK] Configuration complete!")
                     print(f"  PADDLEOCR_DOC_PARSING_API_URL: {api_url}")
                     print(f"  PADDLEOCR_ACCESS_TOKEN: {masked_token}")
@@ -219,7 +225,9 @@ Get your API credentials at: https://paddleocr.com
     print("2. PADDLEOCR_ACCESS_TOKEN - Your access token")
     if current_token:
         masked_token = (
-            current_token[:8] + "..." + current_token[-4:] if len(current_token) > 12 else "***"
+            current_token[:8] + "..." + current_token[-4:]
+            if len(current_token) > 12
+            else "***"
         )
         print(f"   Current: {masked_token}")
 
@@ -266,9 +274,7 @@ Get your API credentials at: https://paddleocr.com
     print()
     print("Next steps:")
     print("  1. Test the configuration:")
-    print(
-        "     python skills/paddleocr-doc-parsing/scripts/smoke_test.py"
-    )
+    print("     python skills/paddleocr-doc-parsing/scripts/smoke_test.py")
     print()
     print("  2. Try parsing a document:")
     print(
