@@ -80,6 +80,9 @@ Configuration:
     result = ocr(
         file_path=args.file_path,
         file_url=args.file_url,
+        useDocUnwarping=False,
+        useDocOrientationClassify=False,
+        visualize=False,
     )
 
     # Format output
