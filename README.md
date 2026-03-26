@@ -1,206 +1,172 @@
-# PaddleOCR-Skills
+# PaddleOCR Skills
 
-<p align="center">
-  <strong>OCR Skills Suite for Claude Code</strong>
-</p>
+This directory contains official PaddleOCR Agent Skills. They integrate with AI apps such as Claude Code for OCR text extraction from images/PDFs and layout-aware document parsing.
 
-<p align="center">
-  Text recognition and document parsing powered by PaddleOCR APIs
-</p>
+## Included Skills
 
-<p align="center">
-  <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python">
-  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/Claude%20Code-Skills-purple.svg" alt="Claude Code Skills">
-</p>
+- `paddleocr-text-recognition`: extract text from images/PDFs.
+- `paddleocr-doc-parsing`: document parsing that converts images/PDFs to Markdown.
 
-<p align="center">
-  <a href="./README-cn.md">简体中文</a> | <strong>English</strong>
-</p>
+## Prerequisites
 
----
+1. Python 3.8 or later must be installed on the device that runs the skill.
+2. These skills depend on PaddleOCR official APIs and require API credentials. Visit the [PaddleOCR website](https://www.paddleocr.com), click **API**, select the model you need, then copy the `API_URL` and `Token`. They correspond to the API URL and access token used for authentication. Supported models per skill:
+   - `paddleocr-text-recognition`: `PP-OCRv5`
+   - `paddleocr-doc-parsing`: `PP-StructureV3`, `PaddleOCR-VL`, `PaddleOCR-VL-1.5`
 
-## Overview
+## Using in AI Apps
 
-This repository provides two complementary skills:
+> The instructions below cover both skills. Install and configure only the skill(s) you need.
 
-1. `paddleocr-text-recognition`
-- Fast OCR for images and PDFs
-- Returns unified JSON: `ok`, `text`, `result`, `error`
+### Install to AI Apps
 
-2. `paddleocr-doc-parsing`
-- Advanced layout parsing for complex documents
-- Extracts full text plus raw structured parsing result
+#### Option 1: Install via `skills` CLI
 
----
+The `skills` CLI installs skills globally on the device so all AI apps can use them. [Node.js](https://nodejs.org/en/download) is required.
 
-## Feature Comparison
-
-| Dimension | paddleocr-text-recognition | paddleocr-doc-parsing |
-|-----------|----------------------------|-----------------------|
-| Best for | Plain text extraction | Complex layout documents |
-| Extracted `text` source | `prunedResult.rec_texts` joined by line/page | `layoutParsingResults[].markdown.text` (fallback: concatenated blocks) |
-| Raw `result` granularity | Line-level OCR (`rec_texts`, `rec_scores`, `rec_boxes`, `rec_polys`) | Page/block-level parsing (`prunedResult.parsing_res_list`, `markdown`) |
-| CLI input | `--file-url` or `--file-path` | `--file-url` or `--file-path`, plus `--file-type {0,1}` |
-| Default timeout | `PADDLEOCR_TIMEOUT=120` | `PADDLEOCR_DOC_PARSING_TIMEOUT=600` |
-| Large-file helper script | No | Yes (`skills/paddleocr-doc-parsing/scripts/optimize_file.py`, image optimization) |
-
----
-
-## Installation
-
-> Prerequisites: Node.js >= 14, Python 3.8+, [Claude Code CLI](https://claude.ai/code)
-
-Install all skills:
-
-```bash
-npx skills add Aidenwu0209/PaddleOCR-Skills
+```shell
+npx skills add PaddlePaddle/PaddleOCR -g --skill paddleocr-text-recognition -y
+npx skills add PaddlePaddle/PaddleOCR -g --skill paddleocr-doc-parsing -y
 ```
 
-Install one skill only:
+> This repository is relatively large. On slower networks, `npx skills add` may time out. If that happens, clone the repository locally first, then install from the local path:
+>
+> ```shell
+> git clone https://github.com/PaddlePaddle/PaddleOCR.git
+> npx skills add ./PaddleOCR/skills/paddleocr-text-recognition
+> ```
 
-```bash
-npx skills add Aidenwu0209/PaddleOCR-Skills --skill paddleocr-text-recognition
-npx skills add Aidenwu0209/PaddleOCR-Skills --skill paddleocr-doc-parsing
+#### Option 2: Install via `clawhub` (OpenClaw)
+
+```shell
+clawhub install paddleocr-text-recognition
+clawhub install paddleocr-doc-parsing
 ```
 
-Manual install:
+See the [OpenClaw Skills documentation](https://docs.openclaw.ai/tools/skills) for details.
 
-```bash
-git clone https://github.com/Aidenwu0209/PaddleOCR-Skills.git
-cd PaddleOCR-Skills
+#### Option 3: Manual installation
 
-pip install -r skills/paddleocr-text-recognition/scripts/requirements.txt
-pip install -r skills/paddleocr-doc-parsing/scripts/requirements.txt
+If the above options are not available, you can clone the repository and manually copy the skill directories to the location required by your AI app ([Git](https://git-scm.com/downloads) required):
+
+```shell
+git clone https://github.com/PaddlePaddle/PaddleOCR.git
 ```
 
----
+After cloning, skill source code is located under `PaddleOCR/skills`. Refer to the documentation for your AI app to complete installation:
 
-## Configuration
+- Claude Code: <https://code.claude.com/docs/en/skills>
+- claude.ai: <https://support.claude.com/en/articles/12512180-use-skills-in-claude>
+- OpenClaw: <https://docs.openclaw.ai/tools/skills>
 
-Get API credentials at [Paddle AI Studio](https://paddleocr.com), then run:
+### Configure Environment Variables
 
-```bash
-python skills/paddleocr-text-recognition/scripts/configure.py
-python skills/paddleocr-doc-parsing/scripts/configure.py
+After installation, configure the required environment variables so the skills can work properly. Each skill requires the following:
+
+| Skill | Required | Optional |
+| --- | --- | --- |
+| `paddleocr-text-recognition` | `PADDLEOCR_OCR_API_URL` (API URL), `PADDLEOCR_ACCESS_TOKEN` (access token) | `PADDLEOCR_OCR_TIMEOUT` (API request timeout) |
+| `paddleocr-doc-parsing` | `PADDLEOCR_DOC_PARSING_API_URL` (API URL), `PADDLEOCR_ACCESS_TOKEN` (access token) | `PADDLEOCR_DOC_PARSING_TIMEOUT` (API request timeout) |
+
+Below are configuration methods for some AI apps:
+
+- **Claude Code**: add an `env` field to `.claude/settings.local.json` in your project:
+
+  ```json
+  {
+    "env": {
+      "PADDLEOCR_ACCESS_TOKEN": "<ACCESS_TOKEN>",
+      "PADDLEOCR_OCR_API_URL": "<OCR_API_URL>",
+      "PADDLEOCR_DOC_PARSING_API_URL": "<DOC_PARSING_API_URL>"
+    }
+  }
+  ```
+
+- **OpenClaw**: add skill configuration to `~/.openclaw/openclaw.json`:
+
+  ```json
+  {
+    "skills": {
+      "entries": {
+        "paddleocr-text-recognition": {
+          "enabled": true,
+          "env": {
+            "PADDLEOCR_OCR_API_URL": "<OCR_API_URL>",
+            "PADDLEOCR_ACCESS_TOKEN": "<ACCESS_TOKEN>"
+          }
+        },
+        "paddleocr-doc-parsing": {
+          "enabled": true,
+          "env": {
+            "PADDLEOCR_DOC_PARSING_API_URL": "<DOC_PARSING_API_URL>",
+            "PADDLEOCR_ACCESS_TOKEN": "<ACCESS_TOKEN>"
+          }
+        }
+      }
+    }
+  }
+  ```
+
+### Usage Examples
+
+After configuration, describe the OCR or document parsing task in natural language and provide a file URL or local path so the AI app can invoke the corresponding skill.
+
+**paddleocr-text-recognition**
+
+URL example:
+
+```text
+Extract all text from this file: https://example.com/invoice.jpg
 ```
 
-Core environment variables:
+Local file example:
 
-```bash
-PADDLEOCR_OCR_API_URL=
-PADDLEOCR_DOC_PARSING_API_URL=
-PADDLEOCR_ACCESS_TOKEN=
+```text
+Extract all text from local file C:\docs\invoice.pdf
 ```
 
-Optional timeouts used by current code:
+**paddleocr-doc-parsing**
 
-```bash
-PADDLEOCR_TIMEOUT=120
-PADDLEOCR_DOC_PARSING_TIMEOUT=600
+URL example:
+
+```text
+Parse this PDF and return the main body plus all tables: https://example.com/report.pdf
 ```
 
----
+Local file example:
 
-## Quick Start
-
-Text recognition:
-
-```bash
-python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
-  --file-path "./doc.png" \
-  --pretty
+```text
+Parse local file C:\docs\report.pdf and return complete structured output.
 ```
 
-Document parsing:
+## Local Testing
 
-```bash
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
-  --file-path "./invoice.pdf" \
-  --pretty
-```
+This section describes how to run smoke tests locally to verify that the skills work correctly.
 
-Save output to file:
+> The examples below cover both skills. Run only the commands for the skill(s) you need.
 
-```bash
-python skills/paddleocr-text-recognition/scripts/ocr_caller.py \
-  --file-url "https://example.com/image.jpg" \
-  --output result.json \
-  --pretty
+Make sure your working directory is the directory containing this file.
 
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py \
-  --file-url "https://example.com/document.pdf" \
-  --output result.json \
-  --pretty
-```
+1. Install dependencies.
 
----
+   ```shell
+   python -m pip install -r paddleocr-text-recognition/scripts/requirements.txt
+   python -m pip install -r paddleocr-doc-parsing/scripts/requirements.txt
+   # Optional: required only when using document file optimization
+   python -m pip install -r paddleocr-doc-parsing/scripts/requirements-optimize.txt
+   ```
 
-## Output Contract
+2. Configure environment variables (see [Configure Environment Variables](#configure-environment-variables) for the list of variables).
 
-Both CLIs return the same envelope:
+   ```shell
+   export PADDLEOCR_OCR_API_URL="<OCR_API_URL>"
+   export PADDLEOCR_ACCESS_TOKEN="<ACCESS_TOKEN>"
+   export PADDLEOCR_DOC_PARSING_API_URL="<DOC_PARSING_API_URL>"
+   ```
 
-```json
-{
-  "ok": true,
-  "text": "...",
-  "result": { "...": "raw provider response" },
-  "error": null
-}
-```
+3. Run the smoke test scripts.
 
-On error:
-
-```json
-{
-  "ok": false,
-  "text": "",
-  "result": null,
-  "error": { "code": "API_ERROR", "message": "..." }
-}
-```
-
----
-
-## Large Files
-
-For large files with document parsing:
-
-- Prefer `--file-url` to avoid local base64 overhead.
-- For large images, use `skills/paddleocr-doc-parsing/scripts/optimize_file.py`.
-- For large PDFs, extract needed pages first, then parse.
-
-See:
-- [Quick Reference](./docs/QUICK_REFERENCE.md)
-- [Large File Guide](./docs/LARGE_FILES.md)
-
----
-
-## Testing
-
-```bash
-python skills/paddleocr-text-recognition/scripts/smoke_test.py --skip-api-test
-python skills/paddleocr-doc-parsing/scripts/smoke_test.py --skip-api-test
-```
-
----
-
-## Documentation
-
-- [Text Recognition Skill Guide](./skills/paddleocr-text-recognition/SKILL.md)
-- [Text Recognition Output Schema](./skills/paddleocr-text-recognition/references/output_schema.md)
-- [Doc Parsing Skill Guide](./skills/paddleocr-doc-parsing/SKILL.md)
-- [Doc Parsing Output Schema](./skills/paddleocr-doc-parsing/references/output_schema.md)
-
----
-
-## License
-
-[MIT License](./LICENSE)
-
----
-
-## Support
-
-- Issues: [GitHub Issues](https://github.com/Aidenwu0209/PaddleOCR-Skills/issues)
-- API service: [Paddle AI Studio](https://paddleocr.com)
+   ```shell
+   python paddleocr-text-recognition/scripts/smoke_test.py
+   python paddleocr-doc-parsing/scripts/smoke_test.py
+   ```

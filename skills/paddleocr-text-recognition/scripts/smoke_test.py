@@ -19,8 +19,8 @@ Smoke Test for PaddleOCR Text Recognition
 Verifies configuration and API connectivity.
 
 Usage:
-    python skills/paddleocr-text-recognition/scripts/smoke_test.py
-    python skills/paddleocr-text-recognition/scripts/smoke_test.py --skip-api-test
+    python paddleocr-text-recognition/scripts/smoke_test.py
+    python paddleocr-text-recognition/scripts/smoke_test.py --skip-api-test
 """
 
 import argparse
@@ -41,16 +41,14 @@ HOW TO GET YOUR API CREDENTIALS
 
 1. Visit: https://paddleocr.com
 2. Log in with your Baidu account
-3. Click "API" in the navigation menu
-4. Copy the API URL (e.g., https://xxx.paddleocr.com/ocr)
-5. Click your avatar -> "Access Token" -> Copy the token
+3. Open your model's API call example page
+4. Copy the API URL from the example request
+5. Copy your access token from the same API setup page
 
-Then configure:
-  python skills/paddleocr-text-recognition/scripts/configure.py
-
-Or manually create .env file in project root:
-  PADDLEOCR_OCR_API_URL=https://your-api-url.paddleocr.com/ocr
-  PADDLEOCR_ACCESS_TOKEN=your_token_here
+Set environment variables:
+  export PADDLEOCR_OCR_API_URL=https://your-api-url.paddleocr.com/ocr
+  export PADDLEOCR_ACCESS_TOKEN=your_token_here
+  export PADDLEOCR_OCR_TIMEOUT=120  # optional
 
 ============================================================
 """
@@ -83,17 +81,7 @@ def main():
     except ImportError:
         print("  X httpx not installed")
         print("\nPlease install dependencies:")
-        print("  pip install httpx python-dotenv")
-        return 1
-
-    try:
-        from dotenv import load_dotenv
-
-        print("  + python-dotenv: installed")
-    except ImportError:
-        print("  X python-dotenv not installed")
-        print("\nPlease install dependencies:")
-        print("  pip install httpx python-dotenv")
+        print("  pip install httpx")
         return 1
 
     # Check configuration
@@ -137,9 +125,7 @@ def main():
         print(f"\n  X API call failed: {error.get('message')}")
         if "Authentication" in error.get("message", ""):
             print("\n  Hint: Check if your token is correct and not expired.")
-            print(
-                "        Get a new token at: https://paddleocr.com -> Avatar -> Access Token"
-            )
+            print("        Get a new token from your API call example page.")
         return 1
 
     print("  + API call successful!")
@@ -157,10 +143,13 @@ def main():
     print("=" * 60)
     print("\nNext steps:")
     print(
-        '  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL" --pretty'
+        '  python paddleocr-text-recognition/scripts/ocr_caller.py --file-url "URL" --pretty'
     )
     print(
-        '  python skills/paddleocr-text-recognition/scripts/ocr_caller.py --file-path "image.png" --pretty'
+        '  python paddleocr-text-recognition/scripts/ocr_caller.py --file-path "image.png" --pretty'
+    )
+    print(
+        "  Results are auto-saved to the system temp directory; the caller prints the saved path."
     )
 
     return 0

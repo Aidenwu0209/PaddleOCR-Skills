@@ -19,8 +19,8 @@ Smoke Test for PaddleOCR Document Parsing Skill
 Verifies configuration and API connectivity.
 
 Usage:
-    python skills/paddleocr-doc-parsing/scripts/smoke_test.py
-    python skills/paddleocr-doc-parsing/scripts/smoke_test.py --skip-api-test
+    python paddleocr-doc-parsing/scripts/smoke_test.py
+    python paddleocr-doc-parsing/scripts/smoke_test.py --skip-api-test
 """
 
 import argparse
@@ -39,18 +39,16 @@ def print_config_guide():
 HOW TO GET YOUR API CREDENTIALS
 ============================================================
 
-1. Visit: https://paddleocr.com
-2. Log in with your Baidu account
+1. Visit: https://www.paddleocr.com
+2. Open your model's API page and sign in
 3. Open your model's Example Code section
 4. In Example Code, copy the API URL value
 5. In Example Code, copy the Access Token value
 
-Then configure:
-  python skills/paddleocr-doc-parsing/scripts/configure.py
-
-Or manually create .env file in project root:
-  PADDLEOCR_DOC_PARSING_API_URL=https://your-api-url.paddleocr.com/layout-parsing
-  PADDLEOCR_ACCESS_TOKEN=your_token_here
+Set environment variables:
+  export PADDLEOCR_DOC_PARSING_API_URL=https://your-api-url.paddleocr.com/layout-parsing
+  export PADDLEOCR_ACCESS_TOKEN=your_token_here
+  export PADDLEOCR_DOC_PARSING_TIMEOUT=600  # optional
 
 ============================================================
 """
@@ -83,17 +81,7 @@ def main():
     except ImportError:
         print("  X httpx not installed")
         print("\nPlease install dependencies:")
-        print("  pip install httpx python-dotenv")
-        return 1
-
-    try:
-        from dotenv import load_dotenv
-
-        print("  + python-dotenv: installed")
-    except ImportError:
-        print("  X python-dotenv not installed")
-        print("\nPlease install dependencies:")
-        print("  pip install httpx python-dotenv")
+        print("  pip install httpx")
         return 1
 
     # Check configuration
@@ -156,9 +144,10 @@ def main():
     print("Smoke Test PASSED")
     print("=" * 60)
     print("\nNext steps:")
-    print('  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL"')
+    print('  python paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL"')
+    print('  python paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf"')
     print(
-        '  python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf"'
+        "  Results are auto-saved to the system temp directory; the caller prints the saved path."
     )
 
     return 0

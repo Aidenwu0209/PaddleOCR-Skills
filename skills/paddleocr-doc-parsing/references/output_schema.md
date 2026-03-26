@@ -2,6 +2,8 @@
 
 This document defines the output envelope returned by `vl_caller.py`.
 
+By default, `vl_caller.py` saves the JSON envelope to a unique file under the system temp directory and prints the absolute saved path to `stderr`. Use `--output` when you need a custom destination, or `--stdout` when you want to skip file saving and print JSON directly.
+
 ## Output Envelope
 
 `vl_caller.py` wraps provider response in a stable structure:
@@ -52,9 +54,7 @@ Raw fields may vary by model version and endpoint.
   "result": {
     "layoutParsingResults": [
       {
-        "prunedResult": {
-          "...": "layout elements with position/content/confidence information"
-        },
+        "prunedResult": { ... },  // layout elements with position/content/confidence information
         "markdown": {
           "text": "Full page content in markdown/HTML format",
           "images": {
@@ -86,13 +86,15 @@ Raw fields may vary by model version and endpoint.
 ## Command Examples
 
 ```bash
-# Parse document from URL
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --pretty
+# Parse document from URL (result auto-saves to the system temp directory)
+python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --pretty
 
-# Parse local file
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-path "doc.pdf" --pretty
+# Parse local file (result auto-saves to the system temp directory)
+python scripts/paddleocr-doc-parsing/vl_caller.py --file-path "doc.pdf" --pretty
 
-# Save result to file
-python skills/paddleocr-doc-parsing/scripts/vl_caller.py --file-url "URL" --output result.json
+# Save result to a custom file path
+python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --output "./result.json" --pretty
+
+# Print JSON to stdout without saving a file
+python scripts/paddleocr-doc-parsing/vl_caller.py --file-url "URL" --stdout --pretty
 ```
-
