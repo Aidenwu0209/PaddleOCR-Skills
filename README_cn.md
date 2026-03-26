@@ -1,5 +1,7 @@
 # PaddleOCR Skills
 
+[English](./README.md) | [简体中文](./README_cn.md)
+
 本目录包含 PaddleOCR 官方提供的 Agent Skills，可与 Claude Code 等 AI 应用结合，实现图片/PDF 文档的文字识别和版面解析。
 
 ## 技能列表

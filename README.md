@@ -1,5 +1,7 @@
 # PaddleOCR Skills
 
+[English](./README.md) | [简体中文](./README_cn.md)
+
 This directory contains official PaddleOCR Agent Skills. They integrate with AI apps such as Claude Code for OCR text extraction from images/PDFs and layout-aware document parsing.
 
 ## Included Skills
