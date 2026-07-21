@@ -8,7 +8,10 @@ description: >-
   plain text extraction, 坐标, 检测框, bbox, bounding box, image to text, screenshot, photo scan,
   recognize text.
 license: Apache-2.0
-compatibility: Requires Python 3.9+, uv, and internet access.
+compatibility: >-
+  Requires Python 3.9+, uv, and internet access.
+  Also supports the bundled `paddleocr api` CLI when the `paddleocr` package is installed
+  (see "Alternative: paddleocr CLI" below).
 metadata:
   openclaw:
     requires:
@@ -134,6 +137,77 @@ The script returns a JSON envelope with `ok`, `text`, `result`, and `error` fiel
 For the full schema and field-level details, see `references/output_schema.md`.
 
 > Raw result location (default): the temp-file path printed by the script on stderr
+
+### Alternative: paddleocr CLI
+
+This mirror keeps the bundled `scripts/ocr_caller.py` as the default path. The upstream PaddleOCR project (since [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090), 2026-06-03) also ships an official CLI that calls the same API directly. If the `paddleocr` package is installed, you can use it as a drop-in alternative — no `uv run` or local scripts required.
+
+**Install** (one-time):
+
+```bash
+pip install "paddleocr>=3.7.0"
+```
+
+**Environment**: the CLI only needs `PADDLEOCR_ACCESS_TOKEN`. It resolves the API endpoint internally, so `PADDLEOCR_OCR_API_URL` is **not** required when using the CLI (the URL is still required by the script).
+
+**Basic OCR**:
+
+```bash
+# From URL
+paddleocr api --model_type ocr --file_url "https://example.com/image.png"
+
+# From local file
+paddleocr api --model_type ocr --file_path "./document.pdf"
+```
+
+**Common options**:
+
+```bash
+# Specific model
+paddleocr api --model_type ocr --model PP-OCRv5 --file_path "./report.pdf"
+
+# Disable preprocessing (faster, for flat/well-oriented images)
+paddleocr api --model_type ocr --file_path "./document.pdf" \
+  --use_doc_unwarping False --use_doc_orientation_classify False
+
+# Page ranges
+paddleocr api --model_type ocr --file_path "./large.pdf" --page_ranges "1-5,10,15-20"
+
+# Save result to file
+paddleocr api --model_type ocr --file_url "https://..." --output result.json
+```
+
+**CLI output format** — **different from the script envelope**:
+
+```json
+{
+  "jobId": "job-xxx",
+  "pages": [
+    {
+      "prunedResult": {
+        "rec_texts": ["Line 1", "Line 2"],
+        "rec_scores": [0.98, 0.95]
+      },
+      "ocrImageUrl": "https://..."
+    }
+  ]
+}
+```
+
+The CLI prints `{jobId, pages:[...]}` to stdout. It does **not** wrap the response in the script's `{ok, text, result, error}` envelope, does not auto-save to a temp file, and does not concatenate `text` for you. If you switch paths, update your parsing logic accordingly.
+
+**Scripts vs CLI** — at a glance:
+
+| | Scripts (default) | `paddleocr` CLI (alternative) |
+| --- | --- | --- |
+| Install | `uv` resolves PEP 723 inline deps | `pip install "paddleocr>=3.7.0"` |
+| Required env | `PADDLEOCR_OCR_API_URL` + `PADDLEOCR_ACCESS_TOKEN` | `PADDLEOCR_ACCESS_TOKEN` only |
+| Entry | `uv run scripts/ocr_caller.py ...` | `paddleocr api --model_type ocr ...` |
+| Output | `{ok, text, result, error}` envelope, auto-saved to temp file | `{jobId, pages:[...]}` to stdout |
+| Result location | Path printed on stderr (or `--output`/`--stdout`) | stdout (or `--output`) |
+| Best for | Skills runtimes, offline-friendly, no extra install | Already have `paddleocr` installed, want the upstream-canonical flow |
+
+Run `paddleocr api --help` for the full option list.
 
 ### Usage Examples
 

@@ -8,7 +8,10 @@ description: >-
   发票, 财报, 复杂 PDF, PDF转Markdown, 图表, 阅读顺序; reading order, formula, LaTeX,
   layout parsing, structure extraction, PP-StructureV3, PaddleOCR-VL.
 license: Apache-2.0
-compatibility: Requires Python 3.9+, uv, and internet access.
+compatibility: >-
+  Requires Python 3.9+, uv, and internet access.
+  Also supports the bundled `paddleocr api` CLI when the `paddleocr` package is installed
+  (see "Alternative: paddleocr CLI" below).
 metadata:
   openclaw:
     requires:
@@ -158,6 +161,81 @@ The script returns an envelope with `ok`, `text`, `result`, and `error`. Use `te
 For the complete schema and field-level details, see `references/output_schema.md`.
 
 > Raw result location (default): the temp-file path printed by the script on stderr
+
+### Alternative: paddleocr CLI
+
+This mirror keeps the bundled `scripts/layout_caller.py` as the default path. The upstream PaddleOCR project (since [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090), 2026-06-03) also ships an official CLI that calls the same API directly. If the `paddleocr` package is installed, you can use it as a drop-in alternative — no `uv run` or local scripts required.
+
+**Install** (one-time):
+
+```bash
+pip install "paddleocr>=3.7.0"
+```
+
+**Environment**: the CLI only needs `PADDLEOCR_ACCESS_TOKEN`. It resolves the API endpoint internally, so `PADDLEOCR_DOC_PARSING_API_URL` is **not** required when using the CLI (the URL is still required by the script).
+
+**Basic document parsing**:
+
+```bash
+# From URL
+paddleocr api --model_type doc_parsing --file_url "https://example.com/report.pdf"
+
+# From local file
+paddleocr api --model_type doc_parsing --file_path "./document.pdf"
+```
+
+**Common options**:
+
+```bash
+# Specific model
+paddleocr api --model_type doc_parsing --model PP-StructureV3 --file_path "./report.pdf"
+
+# Disable preprocessing (faster, for flat/well-oriented images)
+paddleocr api --model_type doc_parsing --file_path "./document.pdf" \
+  --use_doc_unwarping False --use_doc_orientation_classify False
+
+# Page ranges (replaces split_pdf.py for most cases)
+paddleocr api --model_type doc_parsing --file_path "./large.pdf" --page_ranges "1-5,10,15-20"
+
+# Save result and extracted resources (images)
+paddleocr api --model_type doc_parsing --file_url "https://..." \
+  --output result.json --save_resources ./resources
+
+# Prettify markdown output
+paddleocr api --model_type doc_parsing --file_path "./document.pdf" --prettify_markdown True
+```
+
+**CLI output format** — **different from the script envelope**:
+
+```json
+{
+  "jobId": "job-xxx",
+  "pages": [
+    {
+      "markdownText": "# Title\n\nContent...",
+      "markdownImages": { "img1": "https://...", "img2": "https://..." },
+      "outputImages": { "layout1": "https://..." }
+    }
+  ]
+}
+```
+
+The CLI prints `{jobId, pages:[...]}` to stdout. It does **not** wrap the response in the script's `{ok, text, result, error}` envelope, does not auto-save to a temp file, and does not concatenate a top-level `text` field for you. Field names also differ from the script's raw `result.result.layoutParsingResults[n].markdown.text` path. If you switch paths, update your parsing logic accordingly.
+
+**Scripts vs CLI** — at a glance:
+
+| | Scripts (default) | `paddleocr` CLI (alternative) |
+| --- | --- | --- |
+| Install | `uv` resolves PEP 723 inline deps | `pip install "paddleocr>=3.7.0"` |
+| Required env | `PADDLEOCR_DOC_PARSING_API_URL` + `PADDLEOCR_ACCESS_TOKEN` | `PADDLEOCR_ACCESS_TOKEN` only |
+| Entry | `uv run scripts/layout_caller.py ...` | `paddleocr api --model_type doc_parsing ...` |
+| Page selection | Pre-split with `scripts/split_pdf.py` | Native `--page_ranges "1-5,10"` |
+| Image optimization | `scripts/optimize_file.py` before upload | Same, or rely on CLI defaults |
+| Output | `{ok, text, result, error}` envelope, auto-saved to temp file | `{jobId, pages:[...]}` to stdout |
+| Result location | Path printed on stderr (or `--output`/`--stdout`) | stdout (or `--output`) |
+| Best for | Skills runtimes, offline-friendly, no extra install | Already have `paddleocr` installed, want the upstream-canonical flow |
+
+Run `paddleocr api --help` for the full option list.
 
 ### Usage Examples
 

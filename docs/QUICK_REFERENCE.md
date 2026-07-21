@@ -133,6 +133,31 @@ uv run scripts/layout_caller.py \
 
 默认情况下，脚本会把完整 JSON 保存到系统临时目录，并在 stderr 打印 `Result saved to: ...`。如需直接输出到 stdout，添加 `--stdout`。
 
+## CLI 方式（paddleocr api）
+
+如果已经安装 `paddleocr` 包（`pip install "paddleocr>=3.7.0"`），可以直接用官方 CLI，无需 `uv run` 和本地脚本：
+
+```bash
+# 文本识别
+paddleocr api --model_type ocr --file_path "./doc.pdf"
+
+# 文档解析
+paddleocr api --model_type doc_parsing --file_path "./doc.pdf"
+```
+
+常用选项：`--file_url` / `--file_path`、`--model`、`--page_ranges "1-5,10"`、`--use_doc_unwarping False`、`--output result.json`、（doc-parsing 专属）`--save_resources ./resources`、`--prettify_markdown True`。
+
+### 与脚本的差异
+
+| | 内置脚本 | `paddleocr` CLI |
+| --- | --- | --- |
+| 必填环境变量 | `PADDLEOCR_OCR_API_URL` 或 `PADDLEOCR_DOC_PARSING_API_URL` + `PADDLEOCR_ACCESS_TOKEN` | 仅 `PADDLEOCR_ACCESS_TOKEN` |
+| 输出格式 | `{ok, text, result, error}` envelope | `{jobId, pages:[...]}` |
+| 结果保存 | 默认写临时文件，stderr 打印路径 | 默认输出到 stdout |
+| PDF 按页 | 用 `split_pdf.py` 预拆 | 原生 `--page_ranges` |
+
+两种路径**输出不兼容**，切换时需同步调整解析逻辑。完整命令清单见各 SKILL.md 的「Alternative: paddleocr CLI」章节。
+
 ## 大文件快速处理
 
 优先使用可访问 URL：
