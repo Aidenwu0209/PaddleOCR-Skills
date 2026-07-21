@@ -2,6 +2,16 @@
 
 本指南针对 `skills/paddleocr-doc-parsing/scripts/layout_caller.py`。
 
+> **关于 `paddleocr` CLI 用户**：本文档的命令面向内置脚本路径。若改用官方 `paddleocr api`
+> CLI，部分步骤可简化：
+> - **按页抽取**：CLI 原生支持 `--page_ranges "1-5,10"`，多数情况下可直接替代
+>   `split_pdf.py`，无需先拆分文件。
+> - **图片压缩**：`optimize_file.py` 与 CLI 路径无关，仍可在上传前用于压缩超大图片。
+> - **大文件**：CLI 同样支持 `--file_url`（参数名为下划线），优先用它避免 base64 开销。
+>
+> CLI 与脚本的输出格式和所需环境变量不同，详见各 SKILL.md 的「Alternative: paddleocr
+> CLI」章节。
+
 ## 核心建议
 
 1. 优先使用 `--file-url`，让服务端直接拉取文件，避免本地文件转 base64 的开销。

@@ -2,6 +2,15 @@
 comments: true
 ---
 
+> ⚠️ **Archived mirror of upstream commit `f0d83faf` (2026-05-06).**
+> This document is mirrored as-is from the upstream **script-based** version. Since then,
+> upstream has (1) **moved** this file to
+> [`docs/version3.x/integrations/skills.en.md`](https://github.com/PaddlePaddle/PaddleOCR/blob/main/docs/version3.x/integrations/skills.en.md)
+> and (2) **refactored** the skills in [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090)
+> (2026-06-03) to use the `paddleocr api` CLI directly (removing `scripts/` and `references/`).
+> This mirror keeps the script-based workflow; for the CLI alternative see the repository
+> root README and the "Alternative: paddleocr CLI" section in each SKILL.md.
+
 # PaddleOCR Agent Skills
 
 PaddleOCR provides official Agent Skills that package the routing rules, calling steps, configuration requirements, and best practices for handling results in OCR and document parsing tasks into on-demand modular capabilities, helping Skills-enabled AI apps complete text recognition and layout parsing more reliably.

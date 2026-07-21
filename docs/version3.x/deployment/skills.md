@@ -2,6 +2,13 @@
 comments: true
 ---
 
+> ⚠️ **上游 commit `f0d83faf`（2026-05-06）脚本版文档的归档镜像。**
+> 本文件按上游**脚本版**原样镜像。此后上游已 (1) 将本文件**迁移**至
+> [`docs/version3.x/integrations/skills.md`](https://github.com/PaddlePaddle/PaddleOCR/blob/main/docs/version3.x/integrations/skills.md)，并 (2) 在
+> [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090)（2026-06-03）中把 skills
+> 重构为直接使用 `paddleocr api` CLI（移除了 `scripts/` 与 `references/`）。本镜像保留脚本版
+> 用法；CLI 备选方案见仓库根 README 与各 SKILL.md 的「Alternative: paddleocr CLI」章节。
+
 # PaddleOCR Agent Skills
 
 PaddleOCR 提供官方 Agent Skills，将 OCR 与文档解析任务的触发规则、调用步骤、配置要求和结果处理最佳实践打包为可按需加载的模块化能力，帮助支持 Skills 的 AI 应用更稳定地完成文字识别与版面解析任务。
