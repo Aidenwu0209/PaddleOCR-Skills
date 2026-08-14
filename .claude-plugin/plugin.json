@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "paddleocr-skills",
+  "displayName": "PaddleOCR Skills",
+  "version": "1.0.0",
+  "description": "OCR text recognition and structured document parsing skills powered by PaddleOCR.",
+  "author": {
+    "name": "Aidenwu0209",
+    "url": "https://github.com/Aidenwu0209"
+  },
+  "homepage": "https://www.paddleocr.com",
+  "repository": "https://github.com/Aidenwu0209/PaddleOCR-Skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "agent-skills",
+    "claude-code",
+    "github-copilot",
+    "ocr",
+    "paddleocr",
+    "document-parsing"
+  ]
+}

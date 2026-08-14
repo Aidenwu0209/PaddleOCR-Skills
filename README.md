@@ -2,6 +2,8 @@
 
 [English](./README.md) | [简体中文](./README_cn.md)
 
+[![skills.sh](https://skills.sh/b/aidenwu0209/paddleocr-skills)](https://skills.sh/aidenwu0209/paddleocr-skills)
+
 Standalone mirror of the official PaddleOCR Agent Skills from
 [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/main/skills).
 
@@ -13,6 +15,15 @@ Synced source: `PaddlePaddle/PaddleOCR` commit `f0d83fafe9598134e5ac46aca62a4738
 > official `paddleocr api` CLI. **This mirror intentionally keeps the script-based version**
 > (which still works and is offline-friendly via `uv`), and additionally documents the CLI as an
 > alternative path. See [Two Ways to Run the Skills](#two-ways-to-run-the-skills) below.
+
+## Discover
+
+- [skills.sh listing](https://skills.sh/aidenwu0209/paddleocr-skills) — **4.3K+ installs**
+  across supported AI agents.
+- [PaddleOCR official website](https://www.paddleocr.com) — API access, tokens, and
+  official product documentation.
+- [DeepSeek Harness GUI edition](https://github.com/Aidenwu0209/dsh-PaddleOCR-Skills) —
+  native tools plus a visual **Settings → PaddleOCR** configuration panel.
 
 ## Included Skills
 
@@ -81,7 +92,37 @@ uv run scripts/layout_caller.py --file-path "/path/to/document.pdf" --pretty
 
 ## Install into AI Apps
 
-From this repository root:
+Use the [skills.sh CLI](https://skills.sh/docs/cli) to choose skills and target agents
+interactively:
+
+```shell
+npx skills add Aidenwu0209/PaddleOCR-Skills
+```
+
+Or install both included skills globally for a specific agent:
+
+| Agent | Command |
+| --- | --- |
+| Codex | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent codex --skill '*' -g -y` |
+| Claude Code | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent claude-code --skill '*' -g -y` |
+| GitHub Copilot | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent github-copilot --skill '*' -g -y` |
+| OpenClaw | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent openclaw --skill '*' -g -y` |
+
+GitHub CLI 2.90.0+ also provides native Agent Skills installation:
+
+```shell
+gh skill install Aidenwu0209/PaddleOCR-Skills --all --agent github-copilot --scope user
+```
+
+For Claude Code plugin development or local testing, clone the repository and load its
+[`plugin.json`](./.claude-plugin/plugin.json):
+
+```shell
+git clone https://github.com/Aidenwu0209/PaddleOCR-Skills.git
+claude --plugin-dir ./PaddleOCR-Skills
+```
+
+To install directly from a local checkout instead:
 
 ```shell
 npx skills add ./skills/paddleocr-text-recognition -g -y
