@@ -4,12 +4,6 @@
 
 [![skills.sh](https://skills.sh/b/aidenwu0209/paddleocr-skills)](https://skills.sh/aidenwu0209/paddleocr-skills)
 
-这是一个从 [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/main/skills)
-官方 `skills/` 目录同步出来的独立仓库。
-
-同步来源：`PaddlePaddle/PaddleOCR` commit `f0d83fafe9598134e5ac46aca62a4738f0eabac0`
-（2026-05-06），已与上游 `main` HEAD `211989f0`（2026-06-26）核对。
-
 > **上游在 [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090)（2026-06-03）对
 > skills 做了重构** —— 删除了内置的 `scripts/` 与 `references/`，改用官方 `paddleocr api`
 > CLI。**本镜像有意保留脚本版**（仍然可用，且通过 `uv` 离线友好），并额外补充 CLI 作为
