@@ -2,6 +2,8 @@
 
 [English](./README.md) | [简体中文](./README_cn.md)
 
+[![skills.sh](https://skills.sh/b/aidenwu0209/paddleocr-skills)](https://skills.sh/aidenwu0209/paddleocr-skills)
+
 这是一个从 [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/main/skills)
 官方 `skills/` 目录同步出来的独立仓库。
 
@@ -12,6 +14,14 @@
 > skills 做了重构** —— 删除了内置的 `scripts/` 与 `references/`，改用官方 `paddleocr api`
 > CLI。**本镜像有意保留脚本版**（仍然可用，且通过 `uv` 离线友好），并额外补充 CLI 作为
 > 备选路径。详见下文[两种运行方式](#两种运行方式)。
+
+## 发现与入口
+
+- [skills.sh 收录页面](https://skills.sh/aidenwu0209/paddleocr-skills) —— 已有 **4.3K+ 次安装**，
+  可用于多种 AI Agent。
+- [PaddleOCR 官网](https://www.paddleocr.com) —— 获取 API、Token 与官方产品文档。
+- [DeepSeek Harness GUI 版](https://github.com/Aidenwu0209/dsh-PaddleOCR-Skills) —— 提供原生
+  Tool，以及可视化的 **Settings → PaddleOCR** 配置面板。
 
 ## 包含的 Skills
 
@@ -77,7 +87,36 @@ uv run scripts/layout_caller.py --file-path "/path/to/document.pdf" --pretty
 
 ## 安装到 AI 应用
 
-在本仓库根目录执行：
+通过 [skills.sh CLI](https://skills.sh/docs/cli) 交互选择 Skill 和目标 Agent：
+
+```shell
+npx skills add Aidenwu0209/PaddleOCR-Skills
+```
+
+也可以将仓库内两个 Skill 全局安装到指定 Agent：
+
+| Agent | 命令 |
+| --- | --- |
+| Codex | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent codex --skill '*' -g -y` |
+| Claude Code | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent claude-code --skill '*' -g -y` |
+| GitHub Copilot | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent github-copilot --skill '*' -g -y` |
+| OpenClaw | `npx skills add Aidenwu0209/PaddleOCR-Skills --agent openclaw --skill '*' -g -y` |
+
+GitHub CLI 2.90.0 以上版本还支持原生 Agent Skills 安装：
+
+```shell
+gh skill install Aidenwu0209/PaddleOCR-Skills --all --agent github-copilot --scope user
+```
+
+如需在 Claude Code 中开发或本地测试插件，可克隆仓库并加载
+[`plugin.json`](./.claude-plugin/plugin.json)：
+
+```shell
+git clone https://github.com/Aidenwu0209/PaddleOCR-Skills.git
+claude --plugin-dir ./PaddleOCR-Skills
+```
+
+如需从本地检出目录直接安装：
 
 ```shell
 npx skills add ./skills/paddleocr-text-recognition -g -y
