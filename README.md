@@ -4,12 +4,6 @@
 
 [![skills.sh](https://skills.sh/b/aidenwu0209/paddleocr-skills)](https://skills.sh/aidenwu0209/paddleocr-skills)
 
-Standalone mirror of the official PaddleOCR Agent Skills from
-[PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/main/skills).
-
-Synced source: `PaddlePaddle/PaddleOCR` commit `f0d83fafe9598134e5ac46aca62a4738f0eabac0`
-(2026-05-06), checked against upstream `main` HEAD `211989f0` (2026-06-26).
-
 > **Upstream refactored the skills in [PR #18090](https://github.com/PaddlePaddle/PaddleOCR/pull/18090)
 > (2026-06-03)** — it removed the bundled `scripts/` and `references/` and switched to the
 > official `paddleocr api` CLI. **This mirror intentionally keeps the script-based version**
