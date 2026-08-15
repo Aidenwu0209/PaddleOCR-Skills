@@ -5,7 +5,7 @@ license: MIT-0
 metadata:
   author: Aidenwu0209
   repository: https://github.com/Aidenwu0209/PaddleOCR-Skills
-  version: "1.0.0"
+  version: "1.0.1"
   openclaw:
     emoji: "🧰"
     homepage: https://github.com/Aidenwu0209/PaddleOCR-Skills
