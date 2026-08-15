@@ -86,6 +86,27 @@ uv run scripts/layout_caller.py --file-path "/path/to/document.pdf" --pretty
 
 ## Install into AI Apps
 
+### One-prompt installation (easiest)
+
+Copy the entire prompt below into Codex, Claude Code, Cursor, OpenCode, OpenClaw,
+or another AI agent that can operate a terminal:
+
+```text
+Install both Agent Skills from https://github.com/Aidenwu0209/PaddleOCR-Skills on this computer.
+1. Detect the current supported agent and check Node.js/npx, Python 3.9+, and uv. If something is missing, explain it and use its official installer. Do not use sudo or change unrelated system settings without my permission.
+2. Install all skills globally for the detected agent with: npx skills add Aidenwu0209/PaddleOCR-Skills --skill '*' -g -y
+3. Run npx skills list -g --json and verify that both paddleocr-text-recognition and paddleocr-doc-parsing are installed.
+4. Do not invent, expose, or log a PaddleOCR token. Stop at credential configuration, show me the official https://www.paddleocr.com link, and tell me exactly which endpoint/token values are still required.
+5. Report the commands used, install paths, and verification result.
+```
+
+ClawHub also provides a small setup skill that performs the same guarded
+repository installation and verification flow:
+
+```bash
+openclaw skills install @aidenwu0209/paddleocr-skills-setup
+```
+
 Use the [skills.sh CLI](https://skills.sh/docs/cli) to choose skills and target agents
 interactively:
 

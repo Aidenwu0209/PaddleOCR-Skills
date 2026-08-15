@@ -81,6 +81,25 @@ uv run scripts/layout_caller.py --file-path "/path/to/document.pdf" --pretty
 
 ## 安装到 AI 应用
 
+### 一段 Prompt 安装（最简单）
+
+把下面整段复制给 Codex、Claude Code、Cursor、OpenCode、OpenClaw，或其他可以操作终端的 AI Agent：
+
+```text
+请在这台电脑上安装 https://github.com/Aidenwu0209/PaddleOCR-Skills 中的两个 Agent Skill。
+1. 识别当前支持的 Agent，并检查 Node.js/npx、Python 3.9+ 和 uv。如果缺少依赖，先解释用途并只使用官方安装方式；未经我允许不要使用 sudo 或修改无关系统设置。
+2. 为检测到的 Agent 执行：npx skills add Aidenwu0209/PaddleOCR-Skills --skill '*' -g -y
+3. 执行 npx skills list -g --json，确认 paddleocr-text-recognition 和 paddleocr-doc-parsing 都已出现。
+4. 不要编造、显示或记录 PaddleOCR Token。在凭据配置步骤停下来，向我展示官方 https://www.paddleocr.com 链接，并明确告诉我还需要填写哪些 API 地址和 Token。
+5. 汇报实际执行的命令、安装路径与验证结果。
+```
+
+ClawHub 还提供一个小型 Setup Skill，用同样的安全流程完成整个仓库的安装与验证：
+
+```bash
+openclaw skills install @aidenwu0209/paddleocr-skills-setup
+```
+
 通过 [skills.sh CLI](https://skills.sh/docs/cli) 交互选择 Skill 和目标 Agent：
 
 ```shell
