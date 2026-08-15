@@ -94,6 +94,12 @@ uv run scripts/layout_caller.py --file-path "/path/to/document.pdf" --pretty
 5. 汇报实际执行的命令、安装路径与验证结果。
 ```
 
+ClawHub 还提供一个小型 Setup Skill，用同样的安全流程完成整个仓库的安装与验证：
+
+```bash
+openclaw skills install @aidenwu0209/paddleocr-skills-setup
+```
+
 通过 [skills.sh CLI](https://skills.sh/docs/cli) 交互选择 Skill 和目标 Agent：
 
 ```shell

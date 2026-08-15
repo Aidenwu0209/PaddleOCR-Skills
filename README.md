@@ -100,6 +100,13 @@ Install both Agent Skills from https://github.com/Aidenwu0209/PaddleOCR-Skills o
 5. Report the commands used, install paths, and verification result.
 ```
 
+ClawHub also provides a small setup skill that performs the same guarded
+repository installation and verification flow:
+
+```bash
+openclaw skills install @aidenwu0209/paddleocr-skills-setup
+```
+
 Use the [skills.sh CLI](https://skills.sh/docs/cli) to choose skills and target agents
 interactively:
 
